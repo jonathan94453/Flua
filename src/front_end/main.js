@@ -1,4 +1,6 @@
 import { Start } from './scenes/Start.js';
+import { Home } from './scenes/Home.js'
+import { UserInfo } from './scenes/UserInfo.js'
 
 const config = {
     type: Phaser.AUTO,
@@ -8,6 +10,8 @@ const config = {
     height: 720,
     pixelArt: false,
     scene: [
+        Home,
+        UserInfo,
         Start
     ],
     scale: {

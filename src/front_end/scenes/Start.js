@@ -7,8 +7,7 @@ export class Start extends Phaser.Scene
 
     preload()
     {
-        this.load.setPath("assets"); 
-        this.load.image("background", "GrassTexture.jpg");
+        this.load.image("background", "/assets/GrassTexture.jpg");
         this.load.image('logo', '/assets/phaser.png');
         this.load.image('player', '/assets/WhiteCircle.png');
 
