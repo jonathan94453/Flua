@@ -28,15 +28,12 @@ this.router.get('/villager', async (req, res) => {
         res.status(200).send(response) 
     }
 }); 
-
-
-
-
-
-
-
-
 }
+
+updateLanguage(newLanguage) {
+    this.language = newLanguage;
+    this.setUpRoutes();  // Re-setup routes with new language
+  }
 
 
 
