@@ -1,13 +1,20 @@
-import express from 'express'
-
+import express from 'express' 
+import cors from 'cors'
 const app = express()
+
+
+
 const port = 4000
 
-app.get('/', (req, res) => {
+app.use(cors()); 
+
+app.get('/test', (req, res) => {
     res.send('express server reached')
 })
 
-app.post('/set_language/')
+
+
+
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
