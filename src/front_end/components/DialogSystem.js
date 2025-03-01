@@ -89,7 +89,7 @@ export class DialogSystem {
         this.dialogGroup.setVisible(true);
         
         // Set initial NPC dialog
-        this.dialogText.setText("Hello! What would you like to talk about?");
+        this.dialogText.setText(responses);
         
         // Clear user input
         this.userInput = "";
@@ -138,7 +138,13 @@ export class DialogSystem {
         this.inputText.setText(this.userInput + (this.scene.time.now % 1000 < 500 ? '|' : '')); // Add blinking cursor
     }
     
-    submitUserInput() {
+    updateDialogText(text) {
+        if (this.dialogActive) {
+            this.dialogText.setText(text);
+        }
+    }
+
+    async submitUserInput() {
         // Get the user's message
         const userMessage = this.userInput.trim();
         
@@ -149,15 +155,22 @@ export class DialogSystem {
         // Show user message briefly above NPC's response
         this.dialogText.setText("You: " + userMessage);
         
-        // Simulate NPC "thinking" with a slight delay
-        this.scene.time.delayedCall(1000, () => {
-            // Get a random response from the predefined list
-            const randomIndex = Math.floor(Math.random() * this.responses.length);
-            const npcResponse = this.responses[randomIndex];
+        try {
+            const response = await fetch(`http://localhost:4000/npc/villager?prompt=${userMessage}`, {
+                method: 'GET'
+            });
             
-            // Update dialog with NPC response
-            this.dialogText.setText(npcResponse);
-        });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const data = await response.text();
+            console.log("RESPONSE FROM FLUA API in dialog system", data);
+            this.dialogText.setText(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            this.dialogText.setText('Error connecting to server');
+        }
     }
     
     isActive() {

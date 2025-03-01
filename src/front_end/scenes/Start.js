@@ -3,17 +3,7 @@ import { calculateCollision } from '../components/CollisionFunctions.js';
 
 export class Start extends Phaser.Scene {
     constructor() {
-        super('Start');
-        
-        // Predefined NPC responses
-        this.npcResponses = [
-            "Hello there! How can I help you today?",
-            "That's interesting. Tell me more about that.",
-            "I don't understand. Could you explain differently?",
-            "I'm just an NPC in this game. I have limited responses.",
-            "What a lovely day in this game world!",
-            "Did you know this game was made with Phaser?"
-        ];
+        super('Start')
     }
     
     preload() {
@@ -73,10 +63,10 @@ export class Start extends Phaser.Scene {
     }
 
     createReputationDisplay() {
-        
+
     }
     
-    update() {
+    async update() {
         // Calculate distance between player and NPC
         const collision = calculateCollision(this.player, this.npc);
 
@@ -116,11 +106,29 @@ export class Start extends Phaser.Scene {
         
         // Check for interaction key press when close to NPC
         if (Phaser.Input.Keyboard.JustDown(this.interactKey) && isColliding && !this.dialogSystem.isActive()) {
-            this.dialogSystem.showDialog(this.npcResponses);
+            // First show the dialog with a loading message
+            this.dialogSystem.showDialog(["..."]);
+            
+            // Then fetch the data
+            try {
+                const response = await fetch('http://localhost:4000/npc/villager?prompt=init', {
+                    method: 'GET'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.text();
+                console.log("RESPONSE FROM FLUA API", data);
+                
+                // Update the dialog with the received data
+                this.dialogSystem.updateDialogText(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                this.dialogSystem.updateDialogText("Error connecting to server. Please try again.");
+            }
         }
-
-        // Update dialog system
-        this.dialogSystem.update();
     }
     
     updateInteractionPrompt(isNearNPC) {

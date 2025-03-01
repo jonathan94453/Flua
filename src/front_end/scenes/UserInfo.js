@@ -30,7 +30,9 @@ export class UserInfo extends Phaser.Scene {
         }).setOrigin(0.5).setInteractive();
 
         englishButton.on('pointerdown', () => {
-            fetch('http://localhost:4000/test')
+            fetch('http://localhost:4000/set_language?value=english', {
+                method: 'POST'
+            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -43,27 +45,26 @@ export class UserInfo extends Phaser.Scene {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-            // this.selectLanguage('English', nameInput);
+            this.scene.start('Start');
         })
 
         spanishButton.on('pointerdown', () => {
-            this.selectLanguage('Spanish', nameInput);
+            fetch('http://localhost:4000/set_language?value=spanish', {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log("RESPONSE FROM FLUA API", data); // Handle the response
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+            this.scene.start('Start');
         });
-    }
-
-    selectLanguage(language, nameInput) {
-        // Get the player's name from the input field
-        const playerName = nameInput.node.value;
-
-        // Store the name and language, then transition to the next scene
-        console.log(`Player's name: ${playerName}`);
-        console.log(`Selected language: ${language}`);
-
-        // Optionally, you can store these values in a global variable or use a Phaser data object to pass the values between scenes
-        this.registry.set('playerName', playerName);
-        this.registry.set('playerLanguage', language);
-
-        // Transition to the next scene (e.g., the game scene)
-        this.scene.start('Start'); // Replace 'Game' with the actual name of your game scene
     }
 }
