@@ -2,8 +2,11 @@
   "name": "flua",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "front-end": "http-server src/front_end -c-1 -p 8080",
+    "back-end": "node src/back_end/express.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,8 @@
   "description": "",
   "dependencies": {
     "axios": "^1.8.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "http-server": "^14.1.1",
     "phaser": "^3.88.2"
   }
