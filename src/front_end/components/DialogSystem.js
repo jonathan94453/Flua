@@ -1,3 +1,5 @@
+import { extractNumber, extractTextAfterNumber } from "../utils/utils.js";
+
 export class DialogSystem {
     constructor(scene) {
         this.scene = scene;
@@ -168,12 +170,30 @@ export class DialogSystem {
                 
                 const data = await response.text();
                 console.log("RESPONSE FROM FLUA API in dialog system", data);
-                this.dialogText.setText(data);
+                this.responseNumber = extractNumber(data) || 0;
+                console.log(this.responseNumber);
+                this.responseText = extractTextAfterNumber(data);
+                console.log(this.responseText);
+                this.dialogText.setText(this.responseText);
+
+                if (this.scene.onDialogResponse) {
+                    this.scene.onDialogResponse(this.responseNumber);
+                }
+                if (this.scene.onDialogText) {
+                    this.scene.onDialogText(this.responseText);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
                 this.dialogText.setText('Error connecting to server');
             }
         }
+    }
+
+    getResponseNumber() {
+        return this.responseNumber || 0;
+    }
+    getResponse() {
+        return this.responseText;
     }
     
     isActive() {

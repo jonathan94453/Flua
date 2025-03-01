@@ -1,6 +1,8 @@
 import { DialogSystem } from '../components/DialogSystem.js';
 import { calculateCollision } from '../components/CollisionFunctions.js';
 
+let firstResponse = "...";
+
 export class Start extends Phaser.Scene {
     constructor() {
         super('Start')
@@ -19,10 +21,12 @@ export class Start extends Phaser.Scene {
         this.npc = this.physics.add.sprite(1000, 360, 'player', 20);
         this.score = 10;
         this.createReputation();
+        this.createHintBox();
+        this.hintBox.visible = false;
         
         // Set sizes
-        this.player.setDisplaySize(100, 100);
-        this.npc.setDisplaySize(100, 100);
+        this.player.setDisplaySize(50, 50);
+        this.npc.setDisplaySize(50, 50);
         
         // Set physics properties
         this.player.setImmovable(true);
@@ -45,6 +49,14 @@ export class Start extends Phaser.Scene {
 
         // Create the dialog system
         this.dialogSystem = new DialogSystem(this);
+
+        this.onDialogResponse = (responseNumber) => {
+            // Update the score based on the response number
+            this.score += responseNumber;
+            // Update the reputation display
+            this.updateReputationDisplay();
+            console.log("Updated score:", this.score);
+        };
 
         // Create the interaction prompt
         this.createInteractionPrompt();
@@ -71,10 +83,94 @@ export class Start extends Phaser.Scene {
             padding: { x: 10, y: 5 }
         });
     }
+
+    updateReputationDisplay() {
+        if (this.reputation) {
+            this.reputation.setText("Reputation: " + this.score);
+        }
+    }
+
+    createHintBox() {
+        this.hintBox = this.add.text(1200, 20, "Hint?", {
+            font: '18px Arial',
+            fill: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 10, y: 5 }
+        });
+        
+        // Make the hint box interactive
+        this.hintBox.setInteractive();
+
+        let hintMessage = "...";
+        
+        // Create the hint bubble (initially hidden)
+        this.hintBubble = this.add.container(1100, 100);
+        
+        // Background for the hint bubble
+        const bubbleBg = this.add.rectangle(0, 0, 300, 150, 0x000000, 0.8);
+        bubbleBg.setStrokeStyle(2, 0xffffff);
+        
+        // Hint text
+        this.hintText = this.add.text(0, 0, 
+            "The NPC says: " + hintMessage, 
+            {
+                font: '16px Arial',
+                fill: '#ffffff',
+                wordWrap: { width: 280 }
+            }
+        );
+        this.hintText.setOrigin(0.5);
+        
+        // Add elements to container
+        this.hintBubble.add(bubbleBg);
+        this.hintBubble.add(this.hintText);
+        
+        // Hide bubble initially
+        this.hintBubble.visible = false;
+        
+        // Toggle hint bubble on click
+        this.hintBox.on('pointerdown', async () => {
+            this.hintBubble.visible = !this.hintBubble.visible;
+            let latestResponse = this.dialogSystem.getResponse() || firstResponse;
+            if (this.hintBubble.visible) {
+                try {
+                    const response = await fetch(`http://localhost:4000/translate?prompt=${latestResponse}`, {
+                        method: 'GET'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    const data = await response.text();
+                    console.log("RESPONSE FROM FLUA API", data);
+                    
+                    // Update the dialog with the received data
+                    this.hintText.setText("The NPC says: " + data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    this.hintText.setText("Error loading hint. Try again later.");
+                }
+            }
+        });
+        
+        // Close hint bubble when clicking elsewhere (optional)
+        this.input.on('pointerdown', (pointer) => {
+            // Check if click is outside the hint box and bubble
+            const clickedHintBox = this.hintBox.getBounds().contains(pointer.x, pointer.y);
+            const clickedBubble = this.hintBubble.visible && 
+            bubbleBg.getBounds().contains(pointer.x - this.hintBubble.x, pointer.y - this.hintBubble.y);
+            
+            if (!clickedHintBox && !clickedBubble && this.hintBubble.visible) {
+                this.hintBubble.visible = false;
+            }
+        });
+    }
     
     async update() {
         // Calculate distance between player and NPC
         const collision = calculateCollision(this.player, this.npc);
+        this.updateHintVisible();
 
         const { isColliding, distance, collisionThreshold, movementFlags } = collision;
         
@@ -89,21 +185,24 @@ export class Start extends Phaser.Scene {
             if (this.cursors.right.isDown && this.canMoveRight) {
                 this.background.tilePositionX += this.moveSpeed;
                 this.npc.x -= this.moveSpeed;
+                this.player.setFlipX(false);
+                this.player.setFrame(8);
             }
-            
-            if (this.cursors.left.isDown && this.canMoveLeft) {
+            else if (this.cursors.left.isDown && this.canMoveLeft) {
                 this.background.tilePositionX -= this.moveSpeed;
                 this.npc.x += this.moveSpeed;
+                this.player.setFlipX(true);
+                this.player.setFrame(8);
             }
-            
-            if (this.cursors.down.isDown && this.canMoveDown) {
+            else if (this.cursors.down.isDown && this.canMoveDown) {
                 this.background.tilePositionY += this.moveSpeed;
                 this.npc.y -= this.moveSpeed;
+                this.player.setFrame(5)
             }
-            
-            if (this.cursors.up.isDown && this.canMoveUp) {
+            else if (this.cursors.up.isDown && this.canMoveUp) {
                 this.background.tilePositionY -= this.moveSpeed;
                 this.npc.y += this.moveSpeed;
+                this.player.setFrame(7);
             }
         }
 
@@ -112,6 +211,7 @@ export class Start extends Phaser.Scene {
         
         // Check for interaction key press when close to NPC
         if (Phaser.Input.Keyboard.JustDown(this.interactKey) && isColliding && !this.dialogSystem.isActive()) {
+            this.hintBox.visible = true;
             // First show the dialog with a loading message
             this.dialogSystem.showDialog(["..."]);
             
@@ -126,6 +226,7 @@ export class Start extends Phaser.Scene {
                 }
                 
                 const data = await response.text();
+                firstResponse = data;
                 console.log("RESPONSE FROM FLUA API", data);
                 
                 // Update the dialog with the received data
@@ -142,6 +243,14 @@ export class Start extends Phaser.Scene {
             this.interactionPrompt.visible = true;
         } else {
             this.interactionPrompt.visible = false;
+        }
+    }
+
+    updateHintVisible() {
+        if (this.dialogSystem.isActive()) {
+            this.hintBox.visible = true;
+        } else {
+            this.hintBox.visible = false;
         }
     }
 }
