@@ -28,6 +28,7 @@
   "homepage": "https://github.com/jonathan94453/Flua#readme",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.22.0",
     "axios": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
