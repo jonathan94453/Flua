@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "front-end": "http-server src/front_end -c-1 -p 8080",
+    "front-end": "http-server src/front_end/index.html -c-1 -p 8080",
     "back-end": "node src/back_end/express.js"
   },
   "repository": {

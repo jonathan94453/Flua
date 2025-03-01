@@ -7,6 +7,7 @@ app.get('/', (req, res) => {
     res.send('express server reached')
 })
 
+app.post('/set_language/')
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
