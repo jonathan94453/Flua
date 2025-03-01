@@ -17,7 +17,7 @@ let language = "english"
 
 
 // base endpoint 
-app.get('/', (req, res) => {
+app.get('/test', (req, res) => {
     res.send('express server reached')
 })
 
