@@ -32,8 +32,7 @@ this.router.get('/villager', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Villager, but do not correct the user.and someone said this to you. Reply only in" + this.language + " USER INPUT: " + prompt;  
-        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_villager); 
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response. For your response act like a" + this.language + "villager. Do not correct or comment about the user's language skills as if you were rating, but have a conversation respond to the previus question and ask questions to the user, make the entire response 1 or two sentences. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_villager); 
         res.status(200).send(response) 
     }
 }); 
@@ -48,8 +47,7 @@ this.router.get('/innkeeper', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " innkeeper, but do not correct the user. and someone said this to you. Reply only in" + this.language + " USER INPUT: " + prompt;  
-        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_innkeeper); 
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Innkeeper. Do not correct or comment on the user's language skills as if you were rating, but have a conversation respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_innkeeper); 
         res.status(200).send(response) 
     }
 }); 
@@ -64,8 +62,7 @@ this.router.get('/shopkeeper', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " shopkeeper, do not correct the user. and someone said this to you. Reply only in" + this.language + " USER INPUT: " + prompt;  
-        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_shopkeeper); 
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Shopkeeper. Do not correct the user as if you were rating, but have a conversation respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_shopkeeper); 
         res.status(200).send(response) 
     }
 }); 
@@ -80,8 +77,7 @@ this.router.get('/farmer', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Farmer, but do not correct the user and someone said this to you. Reply only in" + this.language + " USER INPUT: " + prompt;  
-        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_farmer); 
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Farmer. Do not correct the user as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_farmer); 
         res.status(200).send(response) 
     }
 }); 
@@ -96,7 +92,7 @@ this.router.get('/blacksmith', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Blacksmith. Do not correct the user, and pretend you are in conversation and someone said this to you. Reply only in" + this.language + " USER INPUT: " + prompt;  
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Blacksmith. Do not correct the user as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;  
         const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_blacksmith); 
         res.status(200).send(response) 
     }
