@@ -9,6 +9,12 @@ const config = {
     width: 1280,
     height: 720,
     pixelArt: false,
+    physics: {
+        default: 'arcade', //the physics engine the game will use
+        arcade: {
+          debug: true
+        }
+    },
     scene: [
         Home,
         UserInfo,

@@ -22,7 +22,9 @@ export class Start extends Phaser.Scene
         const logo = this.add.image(640, 200, 'logo');
 
         const player = this.add.sprite(640, 360, 'player');
+        this.npc = this.add.sprite(2000, 360, 'player')
         player.setDisplaySize(100, 100);
+        this.npc.setDisplaySize(100, 100);
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -32,18 +34,22 @@ export class Start extends Phaser.Scene
     {
         if (this.cursors.right.isDown) {
             this.background.tilePositionX += 5;
+            this.npc.x -= 5;
         }
 
         if (this.cursors.left.isDown) {
             this.background.tilePositionX -= 5;
+            this.npc.x += 5;
         }
 
         if (this.cursors.down.isDown) {
             this.background.tilePositionY += 5;
+            this.npc.y -= 5;
         }
 
         if (this.cursors.up.isDown) {
             this.background.tilePositionY -= 5;
+            this.npc.y += 5;
         }
         
     }
