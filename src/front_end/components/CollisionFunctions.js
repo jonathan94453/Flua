@@ -5,7 +5,7 @@ export function calculateCollision(player, entity) {
     const distance = Math.sqrt(dx * dx + dy * dy);
     
     // Determine collision threshold based on sprite sizes
-    const collisionThreshold = (player.displayWidth + entity.displayWidth) / 2;
+    const collisionThreshold = (player.displayWidth + entity.displayWidth) / 1.5;
     const isColliding = distance < collisionThreshold;
     
     // Initialize movement flags
@@ -18,16 +18,28 @@ export function calculateCollision(player, entity) {
     
     // If colliding, restrict movement based on relative positions
     if (isColliding) {
-        // Calculate collision angle
+        // Calculate collision angle in radians
         const angle = Math.atan2(dy, dx);
         
-        // Determine blocked directions based on collision angle
-        if (Math.abs(angle) < Math.PI / 4) movementFlags.canMoveRight = false; // Entity is to the right
-        if (Math.abs(angle) > 3 * Math.PI / 4) movementFlags.canMoveLeft = false; // Entity is to the left
-        if (angle > 0 && angle < Math.PI / 2) movementFlags.canMoveDown = false; // Entity is below-right
-        if (angle > Math.PI / 2 && angle < Math.PI) movementFlags.canMoveDown = false; // Entity is below-left
-        if (angle < 0 && angle > -Math.PI / 2) movementFlags.canMoveUp = false; // Entity is above-right
-        if (angle < -Math.PI / 2 && angle > -Math.PI) movementFlags.canMoveUp = false; // Entity is above-left
+        // Convert to degrees for easier debugging
+        const angleDegrees = angle * (180 / Math.PI);
+        
+        // Use more inclusive angle ranges with slight overlaps to prevent edge cases
+        // Right: -45° to 45° (entity is to the right)
+        if (angleDegrees >= -45 && angleDegrees <= 45) 
+            movementFlags.canMoveRight = false;
+        
+        // Left: 135° to 180° and -180° to -135° (entity is to the left)
+        if (angleDegrees >= 135 || angleDegrees <= -135) 
+            movementFlags.canMoveLeft = false;
+        
+        // Down: 45° to 135° (entity is below)
+        if (angleDegrees >= 45 && angleDegrees <= 135) 
+            movementFlags.canMoveDown = false;
+        
+        // Up: -135° to -45° (entity is above)
+        if (angleDegrees >= -135 && angleDegrees <= -45) 
+            movementFlags.canMoveUp = false;
     }
 
     return {

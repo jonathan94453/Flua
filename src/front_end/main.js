@@ -8,7 +8,7 @@ const config = {
     parent: 'game-container',
     width: 1280,
     height: 720,
-    pixelArt: false,
+    pixelArt: true,
     physics: {
         default: 'arcade', //the physics engine the game will use
         arcade: {

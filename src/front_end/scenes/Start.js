@@ -18,15 +18,16 @@ export class Start extends Phaser.Scene {
     
     preload() {
         this.load.image("background", "/assets/GrassTexture.jpg");
-        this.load.image('player', '/assets/WhiteCircle.png');
+        this.load.spritesheet('player', '/assets/Characters_V3_Colour.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('dialogBox', '/assets/WhiteCircle.png'); // Use an existing asset for now
     }
     
     create() {
         this.background = this.add.tileSprite(640, 360, 1280, 720, 'background');
         
-        this.player = this.physics.add.sprite(640, 360, 'player');
-        this.npc = this.physics.add.sprite(1000, 360, 'player');
+        this.player = this.physics.add.sprite(640, 360, 'player', 0);
+        this.npc = this.physics.add.sprite(1000, 360, 'player', 20);
+        let reputation = 10;
         
         // Set sizes
         this.player.setDisplaySize(100, 100);
@@ -34,9 +35,9 @@ export class Start extends Phaser.Scene {
         
         // Set physics properties
         this.player.setImmovable(true);
-        this.npc.setCollideWorldBounds(true);
+        this.npc.setCollideWorldBounds(false);
         
-        // Track movement directions
+        // Track movement directions of player
         this.canMoveRight = true;
         this.canMoveLeft = true;
         this.canMoveUp = true;
@@ -69,6 +70,10 @@ export class Start extends Phaser.Scene {
 
         this.interactionPrompt.setOrigin(0.5);
         this.interactionPrompt.visible = false;
+    }
+
+    createReputationDisplay() {
+        
     }
     
     update() {
@@ -105,7 +110,7 @@ export class Start extends Phaser.Scene {
                 this.npc.y += this.moveSpeed;
             }
         }
-            
+
         // Show interaction prompt when close to NPC
         this.updateInteractionPrompt(isColliding);
         
