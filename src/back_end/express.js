@@ -36,7 +36,11 @@ app.post('/set_language', (req, res) => {
     else {  
         res.status(400).send('Invalid value, must be a string'); 
     }
-}) 
+})
+
+app.get('/get_language', (req, res) => {
+    res.status(200).send(language) 
+})
 
 
  
