@@ -26,7 +26,7 @@ this.router.get('/villager', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        const response = await send_to_gemini(init_prompt, conversation_history_villager); 
+        const response = await send_to_gemini(prompt, conversation_history_villager); 
         res.status(200).send(response) 
     }
 }); 
@@ -61,7 +61,7 @@ updateLanguage(newLanguage) {
     
         try {
             const result = await model.generateContent(full_prompt);
-            const model_response = result.response.candidates.content.parts.text; // Assuming this is the AI's response directly.
+            const model_response = result.response.text()  // Assuming this is the AI's response directly.
     
             // Optionally, you can add the new exchange to the conversation history here if needed:
             conversation_history_villager.push({
@@ -74,6 +74,7 @@ updateLanguage(newLanguage) {
                 content: model_response,
             });
     
+            console.log(model_response)
             return model_response 
         } catch (error) {
             console.error("Error interacting with Gemini API:", error);
