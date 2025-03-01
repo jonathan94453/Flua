@@ -1,4 +1,5 @@
 import { DialogSystem } from '../components/DialogSystem.js';
+import { calculateCollision } from '../components/CollisionFunctions.js';
 
 export class Start extends Phaser.Scene {
     constructor() {
@@ -72,33 +73,15 @@ export class Start extends Phaser.Scene {
     
     update() {
         // Calculate distance between player and NPC
-        const dx = this.npc.x - this.player.x;
-        const dy = this.npc.y - this.player.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const collision = calculateCollision(this.player, this.npc);
+
+        const { isColliding, distance, collisionThreshold, movementFlags } = collision;
         
-        // Determine if there's a collision (accounting for sprite sizes)
-        const collisionThreshold = (this.player.displayWidth + this.npc.displayWidth) / 2;
-        const isColliding = distance < collisionThreshold;
-        
-        // Reset movement flags
-        this.canMoveRight = true;
-        this.canMoveLeft = true;
-        this.canMoveUp = true;
-        this.canMoveDown = true;
-        
-        // If colliding, restrict movement based on relative positions
-        if (isColliding) {
-            // Calculate collision angle
-            const angle = Math.atan2(dy, dx);
-            
-            // Determine blocked directions based on collision angle
-            if (Math.abs(angle) < Math.PI / 4) this.canMoveRight = false; // NPC is to the right
-            if (Math.abs(angle) > 3 * Math.PI / 4) this.canMoveLeft = false; // NPC is to the left
-            if (angle > 0 && angle < Math.PI / 2) this.canMoveDown = false; // NPC is below-right
-            if (angle > Math.PI / 2 && angle < Math.PI) this.canMoveDown = false; // NPC is below-left
-            if (angle < 0 && angle > -Math.PI / 2) this.canMoveUp = false; // NPC is above-right
-            if (angle < -Math.PI / 2 && angle > -Math.PI) this.canMoveUp = false; // NPC is above-left
-        }
+        // Update movement flags
+        this.canMoveRight = movementFlags.canMoveRight;
+        this.canMoveLeft = movementFlags.canMoveLeft;
+        this.canMoveUp = movementFlags.canMoveUp;
+        this.canMoveDown = movementFlags.canMoveDown;
         
         // Handle movement with restrictions
         if(!this.dialogSystem.isActive()) {
@@ -122,15 +105,6 @@ export class Start extends Phaser.Scene {
                 this.npc.y += this.moveSpeed;
             }
         }
-        
-        // Debug text - remove in production
-        if (this.debugText) {
-            this.debugText.destroy();
-        }
-
-        this.debugText = this.add.text(10, 10, 
-            `Collisions: ${isColliding}\nDistance: ${distance.toFixed(0)}\nThreshold: ${collisionThreshold}`, 
-            { font: '16px Arial', fill: '#ffffff' });
             
         // Show interaction prompt when close to NPC
         this.updateInteractionPrompt(isColliding);
