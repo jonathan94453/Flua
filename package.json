@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "front-end": "http-server src/front_end/index.html -c-1 -p 8080",
-    "back-end": "node src/back_end/express.js"
+    "front-end": "http-server src/front_end -c-1 -p 8080",
+    "back-end": "node src/back_end/express.js",
+    "start": "lite-server --baseDir=src/front_end",
+    "dev": "vite" 
   },
   "repository": {
     "type": "git",
@@ -26,5 +28,9 @@
     "express": "^4.21.2",
     "http-server": "^14.1.1",
     "phaser": "^3.88.2"
+  },
+  "devDependencies": {
+    "lite-server": "^2.6.1",
+    "vite": "^6.2.0"
   }
 }

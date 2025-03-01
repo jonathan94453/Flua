@@ -1,4 +1,4 @@
-import { Start } from '../front_end/scenes/Start.js';
+import { Start } from './scenes/Start.js';
 
 const config = {
     type: Phaser.AUTO,
