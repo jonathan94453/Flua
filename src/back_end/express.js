@@ -1,9 +1,8 @@
 import express from 'express' 
 import cors from 'cors'
 import npcrouter from './gemeni_npc_endpoints/npc_interactions.js'
+import google_translate from './translate_endpoints/google_translate.js'
 import 'dotenv/config' 
-
-import gemenirouter from './gemeni_npc_endpoints/npc_interactions.js'
 
 
 
@@ -12,7 +11,10 @@ const port = 4000
 app.use(cors()); 
 app.use(express.json())
 const npc_router = new npcrouter("english") 
-app.use('/npc', npc_router.router);
+const translate = new google_translate() 
+
+app.use('/npc', npc_router.router); 
+app.use('/translate', translate.router)
 
 
 let language = "english" 
