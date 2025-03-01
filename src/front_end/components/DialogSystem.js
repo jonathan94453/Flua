@@ -24,12 +24,12 @@ export class DialogSystem {
         this.dialogGroup = this.scene.add.group();
         
         // Create dialog background
-        this.dialogBox = this.scene.add.rectangle(640, 500, 800, 200, 0x000000, 0.7);
+        this.dialogBox = this.scene.add.rectangle(640, 600, 800, 200, 0x000000, 0.7);
         this.dialogBox.setOrigin(0.5);
         this.dialogBox.setStrokeStyle(4, 0xffffff);
         
         // Create NPC dialog text
-        this.dialogText = this.scene.add.text(640, 460, '', {
+        this.dialogText = this.scene.add.text(640, 550, '', {
             font: '24px Arial',
             fill: '#ffffff',
             wordWrap: { width: 760, useAdvancedWrap: true }
@@ -37,19 +37,19 @@ export class DialogSystem {
         this.dialogText.setOrigin(0.5);
         
         // Create input field background
-        this.inputBox = this.scene.add.rectangle(640, 550, 760, 40, 0x333333, 1);
+        this.inputBox = this.scene.add.rectangle(640, 640, 760, 40, 0x333333, 1);
         this.inputBox.setOrigin(0.5);
         this.inputBox.setStrokeStyle(2, 0xffffff);
         
         // Create input text
-        this.inputText = this.scene.add.text(270, 550, '', {
+        this.inputText = this.scene.add.text(270, 640, '', {
             font: '20px Arial',
             fill: '#ffffff'
         });
         this.inputText.setOrigin(0, 0.5);
         
         // Create instruction text
-        this.instructionText = this.scene.add.text(640, 590, 'Type your message and press ENTER to send. Press Q to quit dialog.', {
+        this.instructionText = this.scene.add.text(640, 680, 'Type your message and press ENTER to send. Enter q to quit dialog.', {
             font: '16px Arial',
             fill: '#cccccc'
         });
@@ -154,22 +154,25 @@ export class DialogSystem {
         
         // Show user message briefly above NPC's response
         this.dialogText.setText("You: " + userMessage);
-        
-        try {
-            const response = await fetch(`http://localhost:4000/npc/villager?prompt=${userMessage}`, {
-                method: 'GET'
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+        if (userMessage == "q") {
+            this.hideDialog();
+        } else {
+            try {
+                const response = await fetch(`http://localhost:4000/npc/villager?prompt=${userMessage}`, {
+                    method: 'GET'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.text();
+                console.log("RESPONSE FROM FLUA API in dialog system", data);
+                this.dialogText.setText(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                this.dialogText.setText('Error connecting to server');
             }
-            
-            const data = await response.text();
-            console.log("RESPONSE FROM FLUA API in dialog system", data);
-            this.dialogText.setText(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            this.dialogText.setText('Error connecting to server');
         }
     }
     

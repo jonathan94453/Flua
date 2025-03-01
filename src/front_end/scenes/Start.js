@@ -17,7 +17,8 @@ export class Start extends Phaser.Scene {
         
         this.player = this.physics.add.sprite(640, 360, 'player', 0);
         this.npc = this.physics.add.sprite(1000, 360, 'player', 20);
-        let reputation = 10;
+        this.score = 10;
+        this.createReputation();
         
         // Set sizes
         this.player.setDisplaySize(100, 100);
@@ -34,7 +35,7 @@ export class Start extends Phaser.Scene {
         this.canMoveDown = true;
         
         // Game speed
-        this.moveSpeed = 5;
+        this.moveSpeed = 3;
 
         this.physics.world.setBounds(0, 0, 10000, 10000);
         
@@ -62,8 +63,13 @@ export class Start extends Phaser.Scene {
         this.interactionPrompt.visible = false;
     }
 
-    createReputationDisplay() {
-
+    createReputation() {
+        this.reputation = this.add.text(20, 20, "Reputation: " + this.score, {
+            font: '18px Arial',
+            fill: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 10, y: 5 }
+        });
     }
     
     async update() {
