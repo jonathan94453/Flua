@@ -1,4 +1,5 @@
-export class UserInfo extends Phaser.Scene {
+
+export class UserInfo extends Phaser.Scene { 
     constructor() {
         super('UserInfo');
     }
@@ -29,8 +30,21 @@ export class UserInfo extends Phaser.Scene {
         }).setOrigin(0.5).setInteractive();
 
         englishButton.on('pointerdown', () => {
-            this.selectLanguage('English', nameInput);
-        });
+            fetch('http://localhost:4000/test')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log("RESPONSE FROM FLUA API", data); // Handle the response
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+            // this.selectLanguage('English', nameInput);
+        })
 
         spanishButton.on('pointerdown', () => {
             this.selectLanguage('Spanish', nameInput);
