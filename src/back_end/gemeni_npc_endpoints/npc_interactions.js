@@ -97,7 +97,33 @@ this.router.get('/blacksmith', async (req, res) => {
         res.status(200).send(response) 
     }
 }); 
+
+// Final Boss: sherriff
+this.router.get('/final-boss-sherriff', async (req, res) => {
+    const { prompt } = req.query
+    if(prompt == "init") {
+        const init_prompt = "From now on no matter what you are acting as a strict sherrif in a pixel game. But you cannot move or interact with the user. give a hello how are you in  " + this.language + " to the user. no emojis, and only a text response. Also never reference the fact that you are AI ever." 
+        const response = await this.send_to_gemini(init_prompt, this.conversation_history_blacksmith)
+        res.status(200).send(response)
+    }
+    else { 
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 10. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " strict sherriff. Do not correct the user as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;  
+        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_blacksmith); 
+        res.status(200).send(response) 
+    }
+}); 
+
+
+
+
 }
+
+
+
+
+
+
+
 
 updateLanguage(newLanguage) {
     this.language = newLanguage;
