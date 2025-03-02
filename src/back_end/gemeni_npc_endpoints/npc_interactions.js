@@ -26,12 +26,13 @@ async setUpRoutes() {
 this.router.get('/villager', async (req, res) => {
     const { prompt } = req.query
     if(prompt == "init") {
-        const init_prompt = "From now on no matter what you are acting as a poor villager in a pixel game where the user is interacting with you to learn a language. But you cannot move or interact with them give a hello how are you in  " + this.language + " no emojis, and only a text response. Also never reference the fact that you are AI ever." 
+        const init_prompt = this.generate_inital_prompt("villager")
         const response = await this.send_to_gemini(init_prompt, this.conversation_history_villager)
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Be really strict with rating, dont be afraid to give zeros. Place your rating as an integer value at the front of your response. For your response act like a" + this.language + "villager. Do not correct or comment about the user's language skills as if you were rating, but have a conversation respond to the previus question and ask questions to the user, make the entire response 1 or two sentences. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_villager); 
+        const conversation_prompt = this.generate_prompt("villager", prompt)
+        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_villager); 
         res.status(200).send(response) 
     }
 }); 
@@ -41,12 +42,13 @@ this.router.get('/villager', async (req, res) => {
 this.router.get('/innkeeper', async (req, res) => {
     const { prompt } = req.query
     if(prompt == "init") {
-        const init_prompt = "From now on no matter what you are acting as a poor innkeeper in a pixel game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a text response. Also never reference the fact that you are AI ever." 
+        const init_prompt = this.generate_inital_prompt("innkeeper")
         const response = await this.send_to_gemini(init_prompt, this.conversation_history_innkeeper)
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Innkeeper. Do not correct or comment on the user's language skills as if you were rating, but have a conversation respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_innkeeper); 
+        const conversation_prompt = this.generate_prompt("innkeeper", prompt)
+        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_innkeeper); 
         res.status(200).send(response) 
     }
 }); 
@@ -56,12 +58,13 @@ this.router.get('/innkeeper', async (req, res) => {
 this.router.get('/shopkeeper', async (req, res) => {
     const { prompt } = req.query
     if(prompt == "init") {
-        const init_prompt = "From now on no matter what you are acting as a poor shopkeeper in a pixel game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a text response. Also never reference the fact that you are AI ever." 
+        const init_prompt = this.generate_inital_prompt("shopkeeper")
         const response = await this.send_to_gemini(init_prompt, this.conversation_history_shopkeeper)
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Shopkeeper. Do not correct the user as if you were rating, but have a conversation respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_shopkeeper); 
+        const conversation_prompt = this.generate_prompt("shopkeeper", prompt)
+         const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_shopkeeper); 
         res.status(200).send(response) 
     }
 }); 
@@ -71,12 +74,13 @@ this.router.get('/shopkeeper', async (req, res) => {
 this.router.get('/farmer', async (req, res) => {
     const { prompt } = req.query
     if(prompt == "init") {
-        const init_prompt = "From now on no matter what you are acting as a poor farmer in a pixel game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a text response. Also never reference the fact that you are AI ever." 
+        const init_prompt = this.generate_inital_prompt("farmer")
         const response = await this.send_to_gemini(init_prompt, this.conversation_history_farmer)
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Farmer. Do not correct the user as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_farmer); 
+        const conversation_prompt = this.generate_prompt("farmer", prompt)
+        const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_farmer); 
         res.status(200).send(response) 
     }
 }); 
@@ -86,12 +90,12 @@ this.router.get('/farmer', async (req, res) => {
 this.router.get('/blacksmith', async (req, res) => {
     const { prompt } = req.query
     if(prompt == "init") {
-        const init_prompt = "From now on no matter what you are acting as a poor blacksmith in a pixel game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a text response. Also never reference the fact that you are AI ever." 
+        const init_prompt = this.generate_inital_prompt("blacksmith") 
         const response = await this.send_to_gemini(init_prompt, this.conversation_history_blacksmith)
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " Blacksmith. Do not correct the user as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;  
+        const conversation_prompt = this.generate_prompt("blacksmith", prompt)
         const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_blacksmith); 
         res.status(200).send(response) 
     }
@@ -164,6 +168,16 @@ updateLanguage(newLanguage) {
         return { model_response: "Error interacting with AI", updatedHistory: conversation_history };
     }
 
+}
+
+generate_prompt(role, prompt) {
+    let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks. Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + role + ". Do not correct or comment on the users language skills as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;  
+    return conversation_prompt 
+}
+
+generate_inital_prompt(role) {
+    const init_prompt = "From now on no matter what you are acting as a poor " + role + " in a pixel game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a 1 sentence text response. Also never reference the fact that you are AI ever." 
+    return init_prompt 
 }
 
 
