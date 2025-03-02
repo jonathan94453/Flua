@@ -17,6 +17,9 @@ export class Start extends Phaser.Scene {
         this.load.image('Tree_v2_1', '/assets/Tree_v2_1.png');
         this.load.image('Tree_v2_2', '/assets/Tree_v2_2.png');
         this.load.image('Tree_v2_3', '/assets/Tree_v2_3.png');
+
+        // Tree v3 sprite preload
+        this.load.image('Tree_v3_1', '/assets/Tree_v3_1.png');
     }
     
     create() {
@@ -43,13 +46,19 @@ export class Start extends Phaser.Scene {
         this.treeSpacing = this.gridSize / 2;
         this.maxTrees = 20; // Max number of trees to display at once.
 
+        // Pine Trees
+        this.pineTrees = [];
+        this.pineTreeSpacing = this.gridSize / 2;
+        this.maxPineTrees = 10;
+
         // Initialize the random data generator with a fixed seed
         this.rngSeed = 12345
         this.random = new Phaser.Math.RandomDataGenerator([this.rngSeed]); // 12345 is a random seed, change for different patterns.
 
         // Spawn intial environment assets
         // env, asset, envAssetList, size, maxElements, spacing
-        this.spawnEnvAssets('Tree_v2_1', this.trees, 100, this.maxTrees, this.treeSpacing);
+        this.spawnEnvAssets('Tree_v2_1', this.trees, 100, this.maxTrees, this.treeSpacing, 0, false);
+        this.spawnEnvAssets('Tree_v3_1', this.pineTrees, 100, this.maxPineTrees, this.pineTreeSpacing, 10, true);
         
         // End: Terrain Generation ========================
         
@@ -273,8 +282,10 @@ export class Start extends Phaser.Scene {
 
         // Terrain Generation
         // env, asset, envAssetList, size, maxElements, spacing
-        this.spawnEnvAssets('Tree_v2_1', this.trees, 100, this.maxTrees, this.treeSpacing);
+        this.spawnEnvAssets('Tree_v2_1', this.trees, 100, this.maxTrees, this.treeSpacing, 0, false);
+        this.spawnEnvAssets('Tree_v3_1', this.pineTrees, 100, this.maxPineTrees, this.pineTreeSpacing, 10, true);
         this.destroyOffScreenEnvAssets(this.trees, this.gridSize, this.cameras);
+        this.destroyOffScreenEnvAssets(this.pineTrees, this.gridSize, this.cameras);
 
         // console.log(!this.arraysEqual(this.currentChunk, this.getChunk(this.playerX, this.playerY, this.gridSize))); // FIXME: Always False
         let chunk = this.getChunk(this.playerX, this.playerY, this.gridSize);
@@ -286,6 +297,7 @@ export class Start extends Phaser.Scene {
         }
 
         this.updateEnvAssets(this.trees, this.playerSpeed, this.cursors);
+        this.updateEnvAssets(this.pineTrees, this.playerSpeed, this.cursors);
 
     }
     
@@ -315,11 +327,11 @@ export class Start extends Phaser.Scene {
         return [gridX, gridY];
     }
 
-    generateChunk(gridCoordX, gridCoordY, xChunkDelta, yChunkDelta, maxElements, spacing) {
+    generateChunk(gridCoordX, gridCoordY, xChunkDelta, yChunkDelta, maxElements, spacing, seedDelta) {
         // Use the current grid coordinates to generate tree positions
         let positions = [];
         let chunkSeed = gridCoordX + xChunkDelta + gridCoordY + yChunkDelta;
-        let random = new Phaser.Math.RandomDataGenerator([chunkSeed]);
+        let random = new Phaser.Math.RandomDataGenerator([chunkSeed + seedDelta]);
 
         for (let i = 0; i < maxElements; i++) {  // Place 3 trees per grid cell
             // Generate positions deterministically using grid coordinates
@@ -334,7 +346,7 @@ export class Start extends Phaser.Scene {
     }
 
 
-    generatePositions(playerX, playerY, maxElements, spacing) {
+    generatePositions(playerX, playerY, maxElements, spacing, seedDelta) {
         // Find the current grid coordinates of the player
         let gridCoords = this.getChunk(playerX, playerY, this.gridSize);
         let gridCoordX = gridCoords[0];
@@ -344,7 +356,7 @@ export class Start extends Phaser.Scene {
         let positions = [];
         for (let i = -2; i <= 2; i++) {
             for (let j = -2; j <= 2; j++) {
-                let tempPos = this.generateChunk(gridCoordX, gridCoordY, i, j, maxElements, spacing);
+                let tempPos = this.generateChunk(gridCoordX, gridCoordY, i, j, maxElements, spacing, seedDelta);
                 tempPos.forEach(pos => {
                     positions.push(pos);
                 });
@@ -354,11 +366,11 @@ export class Start extends Phaser.Scene {
         return positions;
     }
 
-    spawnEnvAssets(asset, envAssetList, size, maxElements, spacing) {
+    spawnEnvAssets(asset, envAssetList, size, maxElements, spacing, seedDelta, updateChangedChunk) {
         if (this.changedChunk) {
             console.log("Spawning Assets...");
             // Get the tree positions based on the player's current position
-            let positions = this.generatePositions(this.playerX, this.playerY, maxElements, spacing);
+            let positions = this.generatePositions(this.playerX, this.playerY, maxElements, spacing, seedDelta);
 
             // Create trees at the generated positions
             positions.forEach(pos => {
@@ -367,7 +379,9 @@ export class Start extends Phaser.Scene {
                 envAssetList.push(envAsset);
             });
 
-            this.changedChunk = false;
+            if (updateChangedChunk) {
+                this.changedChunk = false;
+            }
         }
     }
 
