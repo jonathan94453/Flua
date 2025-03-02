@@ -53,8 +53,8 @@ export class Start extends Phaser.Scene {
             this.villager = this.physics.add.sprite(-100, 1000, 'player', 20),
             this.inkeeper = this.physics.add.sprite(0, 200, 'player', 150),
             this.shopkeeper = this.physics.add.sprite(1200, -700, 'player', 60),
-            this.farmer = this.physics.add.sprite(950, 1000, 'player', 70),
-            this.blacksmith = this.physics.add.sprite(1500, 700, 'player', 130),
+            this.farmer = this.physics.add.sprite(950, 1300, 'player', 70),
+            this.blacksmith = this.physics.add.sprite(1380, 600, 'player', 130),
         ];
 
         this.sprites = [
@@ -333,6 +333,13 @@ export class Start extends Phaser.Scene {
                 this.playerY -= this.playerSpeed;
             }
         }
+
+        if (this.score >= 100) {
+            this.scene.start('YouWin');
+        } else if (this.score <= 50) {
+            this.scene.start('YouLose')
+        }
+
 
         this.updateEnvAssets(this.structures, this.playerSpeed);
 
