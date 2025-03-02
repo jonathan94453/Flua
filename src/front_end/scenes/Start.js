@@ -394,15 +394,17 @@ export class Start extends Phaser.Scene {
 
     updateEnvAssets(envAssetList, playerSpeed) {
         // Updates the positions of environment assets
-        for (let i = 0; i < envAssetList.length; i++) {
-            if (this.cursors.right.isDown && this.canMoveRight) {
-                envAssetList[i].x -= playerSpeed;
-            } else if (this.cursors.left.isDown && this.canMoveLeft) {
-                envAssetList[i].x += playerSpeed;
-            } else if (this.cursors.down.isDown && this.canMoveDown) {
-                envAssetList[i].y -= playerSpeed;
-            } else if (this.cursors.up.isDown && this.canMoveUp) {
-                envAssetList[i].y += playerSpeed;
+        if (!this.dialogSystem.isActive()) {
+            for (let i = 0; i < envAssetList.length; i++) {
+                if (this.cursors.right.isDown && this.canMoveRight) {
+                    envAssetList[i].x -= playerSpeed;
+                } else if (this.cursors.left.isDown && this.canMoveLeft) {
+                    envAssetList[i].x += playerSpeed;
+                } else if (this.cursors.down.isDown && this.canMoveDown) {
+                    envAssetList[i].y -= playerSpeed;
+                } else if (this.cursors.up.isDown && this.canMoveUp) {
+                    envAssetList[i].y += playerSpeed;
+                }
             }
         }
     }
