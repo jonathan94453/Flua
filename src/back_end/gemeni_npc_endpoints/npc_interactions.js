@@ -107,7 +107,7 @@ this.router.get('/final-boss-sherriff', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 10. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " strict sherriff. Do not correct the user as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;  
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks. Rate the following user's " + this.language + " on a scale of 0 to 10. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " strict sherriff. Do not correct the user as if you were rating, do not comment on or mention the user's language skills. but have a conversation, respond to the previous question and ask questions to the user because you are suspicious and think that they are a criminal. But don't ever directly say that. Reply only in" + this.language + " USER INPUT: " + prompt;  
         const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_blacksmith); 
         res.status(200).send(response) 
     }
