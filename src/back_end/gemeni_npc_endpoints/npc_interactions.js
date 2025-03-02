@@ -110,23 +110,13 @@ this.router.get('/final-boss-sherriff', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks. Rate the following user's " + this.language + " on a scale of 0 to 10. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + " strict sherriff. Do not correct the user as if you were rating, do not comment on or mention the user's language skills. but have a conversation, respond to the previous question and ask questions to the user because you are suspicious and think that they are a criminal. But don't ever directly say that. Reply only in" + this.language + " USER INPUT: " + prompt;  
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks. Rate the following user's " + this.language + " on a scale of 0 to 10. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, directly answering the question of the user input, as if you were a " + this.language + " strict sherriff. Do not correct the user as if you were rating, do not comment on or mention the user's language skills. but have a conversation, respond to the previous question and ask questions to the user because you are suspicious and think that they are a criminal. But don't ever directly say that. Reply only in" + this.language + " USER INPUT: " + prompt;  
         const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_blacksmith); 
         res.status(200).send(response) 
     }
 }); 
 
-
-
-
 }
-
-
-
-
-
-
-
 
 updateLanguage(newLanguage) {
     this.language = newLanguage;
@@ -171,12 +161,15 @@ updateLanguage(newLanguage) {
 }
 
 generate_prompt(role, prompt) {
-    let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks. Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response followed by a space, then give your 1 sentence response, as if you were a " + this.language + role + ". Do not correct or comment on the users language skills as if you were rating, but have a conversation, respond to the previous question and ask questions to the user. Reply only in" + this.language + " USER INPUT: " + prompt;  
+    let conversation_prompt = "Do not act or mention that you are an AI assistant. Rate the USER_INPUT on fluency of" + this.language + "on a scale of 0 to 5. Place your rating at the front of your response followed by a space. Then give a 1 sentence response without mentioning or commenting about fluency at all and roleplay as a " + this.language + role + ". Directly answer the USER_INPUT questions, and keep the conversation going. USER_INPUT: " + prompt
     return conversation_prompt 
 }
 
+// let conversation_prompt = "Do not act or mention that you are an AI assistant. Rate the USER_INPUT on fluency of" this.language + "on a scale of 0 to 5. Place your rating at the front of your response followed by a space. Then give a 1 sentence response without mentioning or commenting about fluency at all and roleplay as a " + this.language + role + ". Directly answer the USER_INPUT questions, and keep the conversation going. USER_INPUT: " + prompt
+
+
 generate_inital_prompt(role) {
-    const init_prompt = "From now on no matter what you are acting as a poor " + role + " in a pixel game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a 1 sentence text response. Also never reference the fact that you are AI ever." 
+    const init_prompt = "You are acting as a " + role + " in a game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a 1 sentence text response. Also never reference the fact that you are AI ever." 
     return init_prompt 
 }
 

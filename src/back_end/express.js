@@ -11,7 +11,7 @@ const port = 4000
 app.use(cors()); 
 app.use(express.json())
 const npc_router = new npcrouter("english") 
-const translate = new google_translate() 
+const translate = new google_translate("english") 
 
 app.use('/npc', npc_router.router); 
 app.use('/translate', translate.router)
