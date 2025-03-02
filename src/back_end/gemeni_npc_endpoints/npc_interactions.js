@@ -163,7 +163,7 @@ updateLanguage(newLanguage) {
 generate_prompt(role, prompt) {
     console.log("THIS.LANGUAGE: " + this.language)
     console.log("ROLE: " + role) 
-    let conversation_prompt = "Rate the USER_INPUT on fluency of" + this.language + "on a scale of 0 to 5. Place your rating at the front of your response followed by a space. Then give a 1 sentence response without mentioning or commenting about fluency at all and. roleplay as a " + role + " only. Directly answer the USER_INPUT questions, and keep the conversation going. USER_INPUT: " + prompt
+    let conversation_prompt = "Rate the USER_INPUT on fluency of" + this.language + "on a scale of 0 to 10. Place your rating at the front of your response followed by a space. Then give a 1 sentence response without mentioning or commenting about fluency at all and. roleplay as a " + role + " only. Directly answer the USER_INPUT questions, and keep the conversation going. USER_INPUT: " + prompt
     return conversation_prompt 
 }
 
