@@ -118,6 +118,14 @@ this.router.get('/final-boss-sherriff', async (req, res) => {
 
 }
 
+nullify_conversations() {
+    this.conversation_history_villager = null 
+    this.conversation_history_innkeeper = null 
+    this.conversation_history_shopkeeper = null 
+    this.conversation_history_farmer = null 
+    this.conversation_history_blacksmith = null 
+}
+
 updateLanguage(newLanguage) {
     this.language = newLanguage;
     this.setUpRoutes();  // Re-setup routes with new language
@@ -171,7 +179,6 @@ generate_prompt(role, prompt) {
 
 
 generate_inital_prompt(role) {
-    const init_prompt = "You are acting as a " + role + " in a game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a greeting in  " + this.language + " no emojis, don't start with an integer, and only a 1 sentence text response. Also never reference the fact that you are AI ever." 
     return init_prompt 
 }
 
