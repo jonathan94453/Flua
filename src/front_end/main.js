@@ -1,6 +1,8 @@
 import { Start } from './scenes/Start.js';
 import { Home } from './scenes/Home.js'
 import { UserInfo } from './scenes/UserInfo.js'
+import { YouLose } from './scenes/YouLose.js';
+import { YouWin } from './scenes/YouWin.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -18,7 +20,9 @@ const config = {
     scene: [
         Home,
         UserInfo,
-        Start
+        Start, 
+        YouLose,
+        YouWin 
     ],
     scale: {
         mode: Phaser.Scale.FIT,

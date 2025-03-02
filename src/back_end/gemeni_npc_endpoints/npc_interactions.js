@@ -163,7 +163,7 @@ updateLanguage(newLanguage) {
 generate_prompt(role, prompt) {
     console.log("THIS.LANGUAGE: " + this.language)
     console.log("ROLE: " + role) 
-    let conversation_prompt = "Rate the USER_INPUT on fluency of" + this.language + "on a scale of 0 to 10. Place your rating at the front of your response followed by a space. Then give a 1 sentence response without mentioning or commenting about fluency at all and. roleplay as a " + role + " only. Directly answer the USER_INPUT questions, and keep the conversation going. USER_INPUT: " + prompt
+    let conversation_prompt = "Rate the USER_INPUT on fluency of" + this.language + "on a scale of 0 to 10. Place your rating at the front of your response followed by a space. Then give a 1 sentence response without mentioning or commenting about fluency at all and. roleplay as a " + this.language + " speaking " + role + " only. Directly answer the USER_INPUT questions, and keep the conversation going. USER_INPUT: " + prompt
     return conversation_prompt 
 }
 
@@ -171,7 +171,7 @@ generate_prompt(role, prompt) {
 
 
 generate_inital_prompt(role) {
-    const init_prompt = "You are acting as a " + role + " in a game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a hello how are you in  " + this.language + " no emojis, and only a 1 sentence text response. Also never reference the fact that you are AI ever." 
+    const init_prompt = "You are acting as a " + role + " in a game where the user is interacting with you to learn a language. But you cannot move or interact with them. give a greeting in  " + this.language + " no emojis, don't start with an integer, and only a 1 sentence text response. Also never reference the fact that you are AI ever." 
     return init_prompt 
 }
 
