@@ -1,5 +1,5 @@
 import { DialogSystem } from '../components/DialogSystem.js';
-import { calculateCollision, calculateNearestNpc } from '../components/CollisionFunctions.js';
+import { calculateCollision, calculateNearestNpc, calculatenpcCollision } from '../components/CollisionFunctions.js';
 
 let firstResponse = "...";
 
@@ -11,7 +11,8 @@ export class Start extends Phaser.Scene {
     preload() {
         this.load.image("background", "/assets/Grass.png");
         this.load.spritesheet('player', '/assets/Characters_V3_Colour.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.image('dialogBox', '/assets/WhiteCircle.png'); // Use an existing asset for now
+        this.load.image('house1', '/assets/House_v1_1.png');
+        this.load.image('house2', '/assets/House_v1_2.png');
 
         // Tree v2 sprite preload
         this.load.image('Tree_v2_1', '/assets/Tree_v2_1.png');
@@ -27,14 +28,28 @@ export class Start extends Phaser.Scene {
         
         this.player = this.physics.add.sprite(640, 360, 'player', 0);
 
+        this.structures = [
+            this.house1 = this.physics.add.sprite(5, 30, 'house1'),
+            this.house2 = this.physics.add.sprite(5, 30, 'house2')
+        ]
+
         // 5 npcs
         this.npcs = [
-            this.villager = this.physics.add.sprite(-100, 500, 'player', 20),
-            this.inkeeper = this.physics.add.sprite(0, 0, 'player', 150),
+            this.villager = this.physics.add.sprite(-100, 1000, 'player', 20),
+            this.inkeeper = this.physics.add.sprite(0, 200, 'player', 150),
             this.shopkeeper = this.physics.add.sprite(900, 260, 'player', 60),
             this.farmer = this.physics.add.sprite(1000, 1000, 'player', 70),
             this.blacksmith = this.physics.add.sprite(1000, -200, 'player', 130),
         ];
+
+        this.sprites = [
+            this.structures, 
+            this.villager,
+            this.shopkeeper,
+            this.farmer,
+            this.blacksmith,
+            this.inkeeper
+        ]
 
         this.villager.setName("villager");
         this.inkeeper.setName("innkeeper");
@@ -83,8 +98,14 @@ export class Start extends Phaser.Scene {
         this.npcs.forEach(npc => {
             npc.setDisplaySize(50 ,50)
             npc.setCollideWorldBounds(false);
+            npc.depth = 2;
             }
         )
+
+        this.structures.forEach(struct => {
+            struct.setDisplaySize(500,500)
+            struct.depth = 1;
+        })
         
         // Set physics properties
         this.player.setImmovable(true);
@@ -111,7 +132,7 @@ export class Start extends Phaser.Scene {
 
         this.onDialogResponse = (responseNumber) => {
             // Update the score based on the response number
-            this.score += responseNumber;
+            this.score += responseNumber - 5;
             // Update the reputation display
             this.updateReputationDisplay();
             console.log("Updated score:", this.score);
@@ -132,6 +153,7 @@ export class Start extends Phaser.Scene {
 
         this.interactionPrompt.setOrigin(0.5);
         this.interactionPrompt.visible = false;
+        this.interactionPrompt.depth = 10;
     }
 
     createReputation() {
@@ -234,7 +256,7 @@ export class Start extends Phaser.Scene {
     
     async update() {
         // Calculate distance between player and nearest npc
-        const collision = calculateCollision(this.player, this.npcs);
+        const collision = calculatenpcCollision(this.player, this.npcs);
         this.updateHintVisible();
 
         const { isColliding, distance, collisionThreshold, movementFlags } = collision;
@@ -282,6 +304,8 @@ export class Start extends Phaser.Scene {
                 this.playerY -= this.playerSpeed;
             }
         }
+
+        this.updateEnvAssets(this.structures, this.playerSpeed);
 
         // Show interaction prompt when close to npc
         this.updateInteractionPrompt(isColliding);
