@@ -9,7 +9,7 @@
     "back-end": "node src/back_end/express.js",
     "kill-port": "kill-port --port 8080",
     "open-chrome-mac": "open -na 'Google Chrome' --args http://127.0.0.1:8080/src/front_end",
-    "open-chrome-win": "start chrome --incognito  http://127.0.0.1:8080/src/front_end",
+    "open-chrome-win": "start chrome http://127.0.0.1:8080/src/front_end",
     "start": "npm-run-all --parallel front-end open-chrome-win",
     "start-mac": "npm-run-all --parallel front-end open-chrome-win",
     "full-stack": "npm-run-all --parallel front-end back-end open-chrome-win",

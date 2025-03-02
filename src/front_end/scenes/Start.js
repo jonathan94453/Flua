@@ -336,7 +336,7 @@ export class Start extends Phaser.Scene {
 
         if (this.score >= 100) {
             this.scene.start('YouWin');
-        } else if (this.score <= 50) {
+        } else if (this.score <= -50) {
             this.scene.start('YouLose')
         }
 
