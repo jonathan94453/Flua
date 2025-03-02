@@ -290,6 +290,7 @@ export class Start extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.interactKey) && isColliding && !this.dialogSystem.isActive()) {
             this.hintBox.visible = true;
             const npc = calculateNearestNpc(this.player, this.npcs);
+            this.dialogSystem.setNpcName(npc.name);
             console.log(npc.name);
             // First show the dialog with a loading message
             this.dialogSystem.showDialog(["..."]);

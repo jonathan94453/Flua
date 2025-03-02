@@ -1,4 +1,5 @@
 import { extractNumber, extractTextAfterNumber } from "../utils/utils.js";
+import { calculateNearestNpc } from '../components/CollisionFunctions.js';
 
 export class DialogSystem {
     constructor(scene) {
@@ -6,6 +7,7 @@ export class DialogSystem {
         this.dialogActive = false;
         this.userInput = ""; // Store user input
         this.isTyping = false; // Track if user is typing
+        this.currentNpc = null;
         
         // Create UI elements
         this.createDialogElements();
@@ -16,6 +18,10 @@ export class DialogSystem {
         
         // Hide dialog initially
         this.hideDialog();
+    }
+
+    setNpcName(npcname) {
+        this.currentNpc = npcname;
     }
     
     createDialogElements() {
@@ -162,7 +168,7 @@ export class DialogSystem {
             this.hideDialog();
         } else {
             try {
-                const response = await fetch(`http://localhost:4000/npc/villager?prompt=${userMessage}`, {
+                const response = await fetch(`http://localhost:4000/npc/${this.currentNpc}?prompt=${userMessage}`, {
                     method: 'GET'
                 });
                 
