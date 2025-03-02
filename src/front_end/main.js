@@ -12,7 +12,7 @@ const config = {
     physics: {
         default: 'arcade', //the physics engine the game will use
         arcade: {
-          debug: true
+          debug: false
         }
     },
     scene: [
