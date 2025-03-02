@@ -94,7 +94,7 @@ export function calculateCollision(player, sprites) {
     sprites.forEach(sprite => {
         const dx = sprite.x - player.x;
         const dy = sprite.y - player.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const distance = Math.sqrt(dx * dx + dy * dy) * 2;
         
         if (distance < shortestDistance) {
             shortestDistance = distance;
@@ -109,11 +109,11 @@ export function calculateCollision(player, sprites) {
             distance: Infinity,
             collisionThreshold: 0,
             angle: null,
-            movementFlags: {
-                canMoveRight: true,
-                canMoveLeft: true,
-                canMoveUp: true,
-                canMoveDown: true
+            structureMovementFlags: {
+                canMoveRight_structure: true,
+                canMoveLeft_structure: true,
+                canMoveUp_structure: true,
+                canMoveDown_structure: true
             },
             nearestsprite: null
         };
@@ -128,12 +128,12 @@ export function calculateCollision(player, sprites) {
     const collisionThreshold = (player.displayWidth + nearestsprite.displayWidth) / 1.5;
     const isColliding = distance < collisionThreshold;
     
-    // Initialize movement flags
-    const movementFlags = {
-        canMoveRight: true,
-        canMoveLeft: true,
-        canMoveUp: true,
-        canMoveDown: true
+    // Initialize structure movement flags
+    const structureMovementFlags = {
+        canMoveRight_structure: true,
+        canMoveLeft_structure: true,
+        canMoveUp_structure: true,
+        canMoveDown_structure: true
     };
     
     // If colliding, restrict movement based on relative positions
@@ -147,19 +147,19 @@ export function calculateCollision(player, sprites) {
         // Use more inclusive angle ranges with slight overlaps to prevent edge cases
         // Right: -45° to 45° (entity is to the right)
         if (angleDegrees >= -45 && angleDegrees <= 45) 
-            movementFlags.canMoveRight = false;
+            structureMovementFlags.canMoveRight_structure = false;
         
         // Left: 135° to 180° and -180° to -135° (entity is to the left)
         if (angleDegrees >= 135 || angleDegrees <= -135) 
-            movementFlags.canMoveLeft = false;
+            structureMovementFlags.canMoveLeft_structure = false;
         
         // Down: 45° to 135° (entity is below)
         if (angleDegrees >= 45 && angleDegrees <= 135) 
-            movementFlags.canMoveDown = false;
+            structureMovementFlags.canMoveDown_structure = false;
         
         // Up: -135° to -45° (entity is above)
         if (angleDegrees >= -135 && angleDegrees <= -45) 
-            movementFlags.canMoveUp = false;
+            structureMovementFlags.canMoveUp_structure = false;
     }
     
     return {
@@ -167,7 +167,7 @@ export function calculateCollision(player, sprites) {
         distance,
         collisionThreshold,
         angle: isColliding ? Math.atan2(dy, dx) : null,
-        movementFlags,
+        structureMovementFlags,
     };
 }
 

@@ -13,8 +13,8 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('player', '/assets/Characters_V3_Colour.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('house1', '/assets/House_v1_1.png');
         this.load.image('house2', '/assets/House_v1_2.png');
-        this.load.image('blacksmithhouse', '/assets/BlacksmithHome.png')
-        this.load.image('shopkeeperstand', '/assets/ShopkeeperStand.png')
+        this.load.image('blacksmithhouse', '/assets/BlacksmithHome.png');
+        this.load.image('shopkeeperstand', '/assets/ShopkeeperStandSmall.png');
 
         this.load.image('TalkBox', '/assets/TalkBox.png');
 
@@ -34,12 +34,9 @@ export class Start extends Phaser.Scene {
 
         this.house1 = this.physics.add.sprite(5, 30, 'house1');
         this.house2 = this.physics.add.sprite(5, 30, 'house2');
-        this.blacksmithhouse = this.physics.add.sprite(1500, 600, 'blacksmithhouse');
+        this.blacksmithhouse = this.physics.add.sprite(1500, 500, 'blacksmithhouse');
         this.shopkeeperstand = this.add.sprite(1200, -900, 'shopkeeperstand');
         this.shopkeeperstand.setScale(0.5); 
-
-        
-
 
         this.structures = [
             this.house1,
@@ -57,7 +54,7 @@ export class Start extends Phaser.Scene {
             this.inkeeper = this.physics.add.sprite(0, 200, 'player', 150),
             this.shopkeeper = this.physics.add.sprite(1200, -700, 'player', 60),
             this.farmer = this.physics.add.sprite(950, 1000, 'player', 70),
-            this.blacksmith = this.physics.add.sprite(1500, 650, 'player', 130),
+            this.blacksmith = this.physics.add.sprite(1500, 700, 'player', 130),
         ];
 
         this.sprites = [
@@ -92,12 +89,12 @@ export class Start extends Phaser.Scene {
         // Trees
         this.trees = []; // Array to hold tree instances
         this.treeSpacing = this.gridSize / 2;
-        this.maxTrees = 20; // Max number of trees to display at once.
+        this.maxTrees = 5; // Max number of trees to display at once.
 
         // Pine Trees
         this.pineTrees = [];
         this.pineTreeSpacing = this.gridSize / 2;
-        this.maxPineTrees = 10;
+        this.maxPineTrees = 5;
 
         // Initialize the random data generator with a fixed seed
         this.rngSeed = 12345
@@ -133,6 +130,12 @@ export class Start extends Phaser.Scene {
         this.canMoveLeft = true;
         this.canMoveUp = true;
         this.canMoveDown = true;
+
+        // Track movement directions of player with respect to structures
+        this.canMoveRight_structure = true;
+        this.canMoveLeft_structure = true;
+        this.canMoveUp_structure = true;
+        this.canMoveDown_structure = true;
         
         // Game speed
         this.moveSpeed = 3;
@@ -275,19 +278,27 @@ export class Start extends Phaser.Scene {
     async update() {
         // Calculate distance between player and nearest npc
         const collision = calculatenpcCollision(this.player, this.npcs);
+        const structureCollision = calculateCollision(this.player, this.structures);
         this.updateHintVisible();
 
         const { isColliding, distance, collisionThreshold, movementFlags } = collision;
+        const { isStructureColliding, structureDistance, structureCollisionThreshold, structureMovementFlags } = structureCollision;
         
         // Update movement flags
         this.canMoveRight = movementFlags.canMoveRight;
         this.canMoveLeft = movementFlags.canMoveLeft;
         this.canMoveUp = movementFlags.canMoveUp;
         this.canMoveDown = movementFlags.canMoveDown;
+
+        // Update structure movement flags
+        this.canMoveRight_structure = structureMovementFlags.canMoveRight_structure;
+        this.canMoveLeft_structure = structureMovementFlags.canMoveLeft_structure;
+        this.canMoveUp_structure = structureMovementFlags.canMoveUp_structure;
+        this.canMoveDown_structure = structureMovementFlags.canMoveDown_structure;
         
         // Handle movement with restrictions
         if(!this.dialogSystem.isActive()) {
-            if (this.cursors.right.isDown && this.canMoveRight) {
+            if (this.cursors.right.isDown && this.canMoveRight && this.canMoveRight_structure) {
                 this.background.tilePositionX += this.moveSpeed;
                 this.npcs.forEach(npc => {
                     npc.x -= this.moveSpeed
@@ -296,7 +307,7 @@ export class Start extends Phaser.Scene {
                 this.player.setFrame(8);
                 this.playerX += this.playerSpeed;
             }
-            else if (this.cursors.left.isDown && this.canMoveLeft) {
+            else if (this.cursors.left.isDown && this.canMoveLeft && this.canMoveLeft_structure) {
                 this.background.tilePositionX -= this.moveSpeed;
                 this.npcs.forEach(npc => {
                     npc.x += this.moveSpeed
@@ -305,7 +316,7 @@ export class Start extends Phaser.Scene {
                 this.player.setFrame(8);
                 this.playerX -= this.playerSpeed;
             }
-            else if (this.cursors.down.isDown && this.canMoveDown) {
+            else if (this.cursors.down.isDown && this.canMoveDown && this.canMoveDown_structure) {
                 this.background.tilePositionY += this.moveSpeed;
                 this.npcs.forEach(npc => {
                     npc.y -= this.moveSpeed
@@ -313,7 +324,7 @@ export class Start extends Phaser.Scene {
                 this.player.setFrame(5)
                 this.playerY += this.playerSpeed;
             }
-            else if (this.cursors.up.isDown && this.canMoveUp) {
+            else if (this.cursors.up.isDown && this.canMoveUp && this.canMoveUp_structure) {
                 this.background.tilePositionY -= this.moveSpeed;
                 this.npcs.forEach(npc => {
                     npc.y += this.moveSpeed
@@ -470,13 +481,13 @@ export class Start extends Phaser.Scene {
         // Updates the positions of environment assets
         if (!this.dialogSystem.isActive()) {
             for (let i = 0; i < envAssetList.length; i++) {
-                if (this.cursors.right.isDown && this.canMoveRight) {
+                if (this.cursors.right.isDown && this.canMoveRight && this.canMoveRight_structure) {
                     envAssetList[i].x -= playerSpeed;
-                } else if (this.cursors.left.isDown && this.canMoveLeft) {
+                } else if (this.cursors.left.isDown && this.canMoveLeft && this.canMoveLeft_structure) {
                     envAssetList[i].x += playerSpeed;
-                } else if (this.cursors.down.isDown && this.canMoveDown) {
+                } else if (this.cursors.down.isDown && this.canMoveDown && this.canMoveDown_structure) {
                     envAssetList[i].y -= playerSpeed;
-                } else if (this.cursors.up.isDown && this.canMoveUp) {
+                } else if (this.cursors.up.isDown && this.canMoveUp && this.canMoveUp_structure) {
                     envAssetList[i].y += playerSpeed;
                 }
             }
