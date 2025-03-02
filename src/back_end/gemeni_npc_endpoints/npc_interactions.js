@@ -32,7 +32,7 @@ this.router.get('/villager', async (req, res) => {
         res.status(200).send(response)
     }
     else { 
-        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Place your rating as an integer value at the front of your response. For your response act like a" + this.language + "villager. Do not correct or comment about the user's language skills as if you were rating, but have a conversation respond to the previus question and ask questions to the user, make the entire response 1 or two sentences. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_villager); 
+        let conversation_prompt = "never mention that you are google gemini ai. Deny it if the user asks . Rate the following user's " + this.language + " on a scale of 0 to 5. Be really strict with rating, dont be afraid to give zeros. Place your rating as an integer value at the front of your response. For your response act like a" + this.language + "villager. Do not correct or comment about the user's language skills as if you were rating, but have a conversation respond to the previus question and ask questions to the user, make the entire response 1 or two sentences. Reply only in" + this.language + " USER INPUT: " + prompt;          const response = await this.send_to_gemini(conversation_prompt, this.conversation_history_villager); 
         res.status(200).send(response) 
     }
 }); 
