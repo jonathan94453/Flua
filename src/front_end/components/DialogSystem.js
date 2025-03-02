@@ -185,7 +185,7 @@ export class DialogSystem {
             this.hideDialog();
         } else {
             try {
-                const response = await fetch(`http://localhost:4000/npc/${this.currentNpc}?prompt=${userMessage}`, {
+                const response = await fetch(`https://flua-production.up.railway.app/npc/${this.currentNpc}?prompt=${userMessage}`, {
                     method: 'GET'
                 });
                 

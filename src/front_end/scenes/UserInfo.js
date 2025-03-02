@@ -34,7 +34,7 @@ export class UserInfo extends Phaser.Scene {
         const russianButton = this.add.image(640, 525, 'russian_button').setDisplaySize(200, 67).setInteractive();
         
         englishButton.on('pointerdown', () => {
-            fetch('http://localhost:4000/set_language?value=english', {
+            fetch('https://flua-production.up.railway.app/set_language?value=english', {
                 method: 'POST'
             })
             .then(response => {
@@ -53,7 +53,7 @@ export class UserInfo extends Phaser.Scene {
         })
 
         spanishButton.on('pointerdown', () => {
-            fetch('http://localhost:4000/set_language?value=spanish', {
+            fetch('https://flua-production.up.railway.app/set_language?value=spanish', {
                 method: 'POST'
             })
             .then(response => {
@@ -72,7 +72,7 @@ export class UserInfo extends Phaser.Scene {
         });
 
         germanButton.on('pointerdown', () => {
-            fetch('http://localhost:4000/set_language?value=german', {
+            fetch('https://flua-production.up.railway.app/set_language?value=german', {
                 method: 'POST'
             })
             .then(response => {
@@ -91,7 +91,7 @@ export class UserInfo extends Phaser.Scene {
         });
 
         frenchButton.on('pointerdown', () => {
-            fetch('http://localhost:4000/set_language?value=french', {
+            fetch('https://flua-production.up.railway.app/set_language?value=french', {
                 method: 'POST'
             })
             .then(response => {
@@ -110,7 +110,7 @@ export class UserInfo extends Phaser.Scene {
         });
 
         russianButton.on('pointerdown', () => {
-            fetch('http://localhost:4000/set_language?value=russian', {
+            fetch('https://flua-production.up.railway.app/set_language?value=russian', {
                 method: 'POST'
             })
             .then(response => {

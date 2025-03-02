@@ -246,7 +246,7 @@ export class Start extends Phaser.Scene {
             let latestResponse = this.dialogSystem.getResponse() || firstResponse;
             if (this.hintBubble.visible) {
                 try {
-                    const response = await fetch(`http://localhost:4000/translate?prompt=${latestResponse}`, {
+                    const response = await fetch(`https://flua-production.up.railway.app/translate?prompt=${latestResponse}`, {
                         method: 'GET'
                     });
                     
@@ -390,7 +390,7 @@ export class Start extends Phaser.Scene {
             
             // Then fetch the data
             try {
-                const response = await fetch(`http://localhost:4000/npc/${npc.name}?prompt=init`, {
+                const response = await fetch(`https://flua-production.up.railway.app/npc/${npc.name}?prompt=init`, {
                     method: 'GET'
                 });
                 
