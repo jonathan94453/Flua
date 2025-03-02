@@ -1,11 +1,44 @@
-export function calculateCollision(player, entity) {
-    // Calculate distance between player and entity
-    const dx = entity.x - player.x;
-    const dy = entity.y - player.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+export function calculateCollision(player, npcs) {
+    let nearestNpc = null;
+    let shortestDistance = Infinity;
+    let collisionResult = null;
+    
+    // Find the nearest NPC
+    npcs.forEach(npc => {
+        const dx = npc.x - player.x;
+        const dy = npc.y - player.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < shortestDistance) {
+            shortestDistance = distance;
+            nearestNpc = npc;
+        }
+    });
+    
+    // If no NPCs found, return default values
+    if (!nearestNpc) {
+        return {
+            isColliding: false,
+            distance: Infinity,
+            collisionThreshold: 0,
+            angle: null,
+            movementFlags: {
+                canMoveRight: true,
+                canMoveLeft: true,
+                canMoveUp: true,
+                canMoveDown: true
+            },
+            nearestNpc: null
+        };
+    }
+    
+    // Calculate collision with the nearest NPC
+    const dx = nearestNpc.x - player.x;
+    const dy = nearestNpc.y - player.y;
+    const distance = shortestDistance; // We already calculated this
     
     // Determine collision threshold based on sprite sizes
-    const collisionThreshold = (player.displayWidth + entity.displayWidth) / 1.5;
+    const collisionThreshold = (player.displayWidth + nearestNpc.displayWidth) / 1.5;
     const isColliding = distance < collisionThreshold;
     
     // Initialize movement flags
@@ -41,12 +74,13 @@ export function calculateCollision(player, entity) {
         if (angleDegrees >= -135 && angleDegrees <= -45) 
             movementFlags.canMoveUp = false;
     }
-
+    
     return {
         isColliding,
         distance,
         collisionThreshold,
         angle: isColliding ? Math.atan2(dy, dx) : null,
-        movementFlags
+        movementFlags,
+        nearestNpc // Return the nearest NPC for reference
     };
 }

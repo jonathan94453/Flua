@@ -26,7 +26,22 @@ export class Start extends Phaser.Scene {
         this.background = this.add.tileSprite(640, 360, 1280, 720, 'background');
         
         this.player = this.physics.add.sprite(640, 360, 'player', 0);
-        this.npc = this.physics.add.sprite(1000, 260, 'player', 20);
+
+        // 5 npcs
+        this.villager = this.physics.add.sprite(1000, 260, 'player', 20);
+        this.inkeeper = this.physics.add.sprite(800, 260, 'player', 20);
+        this.shopkeeper = this.physics.add.sprite(900, 260, 'player', 20);
+        this.farmer = this.physics.add.sprite(1000, 300, 'player', 20);
+        this.blacksmith = this.physics.add.sprite(1000, 200, 'player', 20);
+
+        this.npcs = [
+            this.villager,
+            this.inkeeper,
+            this.shopkeeper,
+            this.farmer,
+            this.blacksmith
+        ];
+
         this.score = 10;
         this.createReputation();
         this.createHintBox();
@@ -64,11 +79,15 @@ export class Start extends Phaser.Scene {
         
         // Set sizes
         this.player.setDisplaySize(50, 50);
-        this.npc.setDisplaySize(50, 50);
+
+        this.npcs.forEach(npc => {
+            npc.setDisplaySize(50 ,50)
+            npc.setCollideWorldBounds(false);
+            }
+        )
         
         // Set physics properties
         this.player.setImmovable(true);
-        this.npc.setCollideWorldBounds(false);
         
         // Track movement directions of player
         this.canMoveRight = true;
@@ -155,7 +174,7 @@ export class Start extends Phaser.Scene {
         
         // Hint text
         this.hintText = this.add.text(0, 0, 
-            "The NPC says: " + hintMessage, 
+            "Translation: " + hintMessage, 
             {
                 font: '16px Arial',
                 fill: '#ffffff',
@@ -189,7 +208,7 @@ export class Start extends Phaser.Scene {
                     console.log("RESPONSE FROM FLUA API", data);
                     
                     // Update the dialog with the received data
-                    this.hintText.setText("The NPC says: " + data);
+                    this.hintText.setText("Translation: " + data);
                 } catch (error) {
                     console.error('Error fetching data:', error);
                     this.hintText.setText("Error loading hint. Try again later.");
@@ -214,8 +233,8 @@ export class Start extends Phaser.Scene {
     }
     
     async update() {
-        // Calculate distance between player and NPC
-        const collision = calculateCollision(this.player, this.npc);
+        // Calculate distance between player and nearest npc
+        const collision = calculateCollision(this.player, this.npcs);
         this.updateHintVisible();
 
         const { isColliding, distance, collisionThreshold, movementFlags } = collision;
@@ -230,36 +249,44 @@ export class Start extends Phaser.Scene {
         if(!this.dialogSystem.isActive()) {
             if (this.cursors.right.isDown && this.canMoveRight) {
                 this.background.tilePositionX += this.moveSpeed;
-                this.npc.x -= this.moveSpeed;
+                this.npcs.forEach(npc => {
+                    npc.x -= this.moveSpeed
+                })
                 this.player.setFlipX(false);
                 this.player.setFrame(8);
                 this.playerX += this.playerSpeed;
             }
             else if (this.cursors.left.isDown && this.canMoveLeft) {
                 this.background.tilePositionX -= this.moveSpeed;
-                this.npc.x += this.moveSpeed;
+                this.npcs.forEach(npc => {
+                    npc.x += this.moveSpeed
+                })
                 this.player.setFlipX(true);
                 this.player.setFrame(8);
                 this.playerX -= this.playerSpeed;
             }
             else if (this.cursors.down.isDown && this.canMoveDown) {
                 this.background.tilePositionY += this.moveSpeed;
-                this.npc.y -= this.moveSpeed;
+                this.npcs.forEach(npc => {
+                    npc.y -= this.moveSpeed
+                })
                 this.player.setFrame(5)
                 this.playerY += this.playerSpeed;
             }
             else if (this.cursors.up.isDown && this.canMoveUp) {
                 this.background.tilePositionY -= this.moveSpeed;
-                this.npc.y += this.moveSpeed;
+                this.npcs.forEach(npc => {
+                    npc.y += this.moveSpeed
+                })
                 this.player.setFrame(7);
                 this.playerY -= this.playerSpeed;
             }
         }
 
-        // Show interaction prompt when close to NPC
+        // Show interaction prompt when close to npc
         this.updateInteractionPrompt(isColliding);
         
-        // Check for interaction key press when close to NPC
+        // Check for interaction key press when close to npc
         if (Phaser.Input.Keyboard.JustDown(this.interactKey) && isColliding && !this.dialogSystem.isActive()) {
             this.hintBox.visible = true;
             // First show the dialog with a loading message
@@ -308,8 +335,8 @@ export class Start extends Phaser.Scene {
 
     }
     
-    updateInteractionPrompt(isNearNPC) {
-        if (isNearNPC && !this.dialogSystem.isActive()) {
+    updateInteractionPrompt(isNearvillager) {
+        if (isNearvillager && !this.dialogSystem.isActive()) {
             this.interactionPrompt.visible = true;
         } else {
             this.interactionPrompt.visible = false;
