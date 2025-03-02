@@ -29,11 +29,11 @@ export class Start extends Phaser.Scene {
 
         // 5 npcs
         this.npcs = [
-            this.villager = this.physics.add.sprite(1000, 260, 'player', 20),
-            this.inkeeper = this.physics.add.sprite(800, 260, 'player', 150),
+            this.villager = this.physics.add.sprite(-100, 500, 'player', 20),
+            this.inkeeper = this.physics.add.sprite(0, 0, 'player', 150),
             this.shopkeeper = this.physics.add.sprite(900, 260, 'player', 60),
-            this.farmer = this.physics.add.sprite(1000, 350, 'player', 70),
-            this.blacksmith = this.physics.add.sprite(1000, 200, 'player', 130),
+            this.farmer = this.physics.add.sprite(1000, 1000, 'player', 70),
+            this.blacksmith = this.physics.add.sprite(1000, -200, 'player', 130),
         ];
 
         this.villager.setName("villager");

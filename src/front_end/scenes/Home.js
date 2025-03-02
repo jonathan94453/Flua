@@ -7,21 +7,29 @@ export class Home extends Phaser.Scene
 
     preload()
     {
-
+        this.load.image('start', "/assets/StartButton.png")
+        this.load.image('title', "/assets/Title.png")
     }
 
     create() {
-        // Background setup
-        this.add.text(400, 100, 'Welcome to Flua', {
-            fontSize: '32px',
-            fill: '#fff'
+        this.cameras.main.setBackgroundColor('#4a6fb5')
+        const title = this.add.image(640, 200, 'title')
+        .setOrigin(0.5)
+        .setDisplaySize(500,500)
+
+        const description = this.add.text(640, 450, 'Learn language by interacting with villagers in a small town! Select your language and embark on a journey to become fluent!', {
+            fontFamily: 'Arial',
+            fontSize: '24px',
+            color: '#ffffff',
+            align: 'center',
+            wordWrap: { width: 700 }
         }).setOrigin(0.5);
 
         // Start Button
-        const startButton = this.add.text(400, 200, 'Start Game', {
-            fontSize: '24px',
-            fill: '#0f0'
-        }).setOrigin(0.5).setInteractive();
+        const startButton = this.add.image(640, 550, 'start')
+        .setOrigin(0.5)
+        .setInteractive()
+        .setDisplaySize(500,500);
 
         startButton.on('pointerdown', () => {
             console.log("test");
