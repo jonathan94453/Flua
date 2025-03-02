@@ -23,15 +23,15 @@ export class UserInfo extends Phaser.Scene {
             fill: '#fff'
         }).setOrigin(0.5);
         
-        const englishButton = this.add.image(640, 225, 'english_button').setDisplaySize(200, 200).setInteractive();
+        const englishButton = this.add.image(640, 225, 'english_button').setDisplaySize(200, 67).setInteractive();
 
-        const spanishButton = this.add.image(640, 300, 'spanish_button').setDisplaySize(200, 200).setInteractive();
+        const spanishButton = this.add.image(640, 300, 'spanish_button').setDisplaySize(200, 67).setInteractive();
 
-        const germanButton = this.add.image(640, 375, 'german_button').setDisplaySize(200, 200).setInteractive();
+        const germanButton = this.add.image(640, 375, 'german_button').setDisplaySize(200, 67).setInteractive();
         
-        const frenchButton = this.add.image(640, 450, 'french_button').setDisplaySize(200, 200).setInteractive();
+        const frenchButton = this.add.image(640, 450, 'french_button').setDisplaySize(200, 67).setInteractive();
         
-        const russianButton = this.add.image(640, 525, 'russian_button').setDisplaySize(200, 200).setInteractive();
+        const russianButton = this.add.image(640, 525, 'russian_button').setDisplaySize(200, 67).setInteractive();
         
         englishButton.on('pointerdown', () => {
             fetch('http://localhost:4000/set_language?value=english', {
