@@ -45,8 +45,15 @@ export class Start extends Phaser.Scene {
             this.shopkeeperstand
         ];
 
-
-        
+        this.frameToggle = false;
+        this.time.addEvent({
+            delay: 500, // Change the frame every 500 milliseconds (adjust to your preference)
+            callback: () => {
+                this.frameToggle = !this.frameToggle; // Toggle the frame between true and false
+            },
+            callbackScope: this,
+            loop: true
+        });
 
         // 5 npcs
         this.npcs = [
@@ -303,8 +310,14 @@ export class Start extends Phaser.Scene {
                 this.npcs.forEach(npc => {
                     npc.x -= this.moveSpeed
                 })
+
+                if (this.frameToggle) {
+                    this.player.setFrame(8);
+                } else {
+                    this.player.setFrame(9);
+                }
+
                 this.player.setFlipX(false);
-                this.player.setFrame(8);
                 this.playerX += this.playerSpeed;
             }
             else if (this.cursors.left.isDown && this.canMoveLeft && this.canMoveLeft_structure) {
@@ -312,8 +325,14 @@ export class Start extends Phaser.Scene {
                 this.npcs.forEach(npc => {
                     npc.x += this.moveSpeed
                 })
+
+                if (this.frameToggle) {
+                    this.player.setFrame(8);
+                } else {
+                    this.player.setFrame(9);
+                }
+
                 this.player.setFlipX(true);
-                this.player.setFrame(8);
                 this.playerX -= this.playerSpeed;
             }
             else if (this.cursors.down.isDown && this.canMoveDown && this.canMoveDown_structure) {
@@ -321,7 +340,13 @@ export class Start extends Phaser.Scene {
                 this.npcs.forEach(npc => {
                     npc.y -= this.moveSpeed
                 })
-                this.player.setFrame(5)
+
+                if (this.frameToggle) {
+                    this.player.setFrame(4);
+                } else {
+                    this.player.setFrame(5);
+                }
+                
                 this.playerY += this.playerSpeed;
             }
             else if (this.cursors.up.isDown && this.canMoveUp && this.canMoveUp_structure) {
@@ -329,7 +354,13 @@ export class Start extends Phaser.Scene {
                 this.npcs.forEach(npc => {
                     npc.y += this.moveSpeed
                 })
-                this.player.setFrame(7);
+
+                if (this.frameToggle) {
+                    this.player.setFrame(6);
+                } else {
+                    this.player.setFrame(7);
+                }
+
                 this.playerY -= this.playerSpeed;
             }
         }
