@@ -13,6 +13,10 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('player', '/assets/Characters_V3_Colour.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('house1', '/assets/House_v1_1.png');
         this.load.image('house2', '/assets/House_v1_2.png');
+        this.load.image('blacksmithhouse', '/assets/BlacksmithHome.png')
+        this.load.image('shopkeeperstand', '/assets/ShopkeeperStand.png')
+
+        this.load.image('TalkBox', '/assets/TalkBox.png');
 
         // Tree v2 sprite preload
         this.load.image('Tree_v2_1', '/assets/Tree_v2_1.png');
@@ -28,18 +32,32 @@ export class Start extends Phaser.Scene {
         
         this.player = this.physics.add.sprite(640, 360, 'player', 0);
 
+        this.house1 = this.physics.add.sprite(5, 30, 'house1');
+        this.house2 = this.physics.add.sprite(5, 30, 'house2');
+        this.blacksmithhouse = this.physics.add.sprite(1500, 600, 'blacksmithhouse');
+        this.shopkeeperstand = this.add.sprite(1200, -900, 'shopkeeperstand');
+        this.shopkeeperstand.setScale(0.5); 
+
+        
+
+
         this.structures = [
-            this.house1 = this.physics.add.sprite(5, 30, 'house1'),
-            this.house2 = this.physics.add.sprite(5, 30, 'house2')
-        ]
+            this.house1,
+            this.house2,
+            this.blacksmithhouse,
+            this.shopkeeperstand
+        ];
+
+
+        
 
         // 5 npcs
         this.npcs = [
             this.villager = this.physics.add.sprite(-100, 1000, 'player', 20),
             this.inkeeper = this.physics.add.sprite(0, 200, 'player', 150),
-            this.shopkeeper = this.physics.add.sprite(900, 260, 'player', 60),
-            this.farmer = this.physics.add.sprite(1000, 1000, 'player', 70),
-            this.blacksmith = this.physics.add.sprite(1000, -200, 'player', 130),
+            this.shopkeeper = this.physics.add.sprite(1200, -700, 'player', 60),
+            this.farmer = this.physics.add.sprite(950, 1000, 'player', 70),
+            this.blacksmith = this.physics.add.sprite(1500, 650, 'player', 130),
         ];
 
         this.sprites = [
@@ -147,7 +165,7 @@ export class Start extends Phaser.Scene {
         this.interactionPrompt = this.add.text(640, 280, 'Press E to talk', {
             font: '18px Arial',
             fill: '#ffffff',
-            backgroundColor: '#000000',
+            backgroundColor: '#60311f',
             padding: { x: 10, y: 5 }
         });
 
@@ -160,7 +178,7 @@ export class Start extends Phaser.Scene {
         this.reputation = this.add.text(20, 20, "Reputation: " + this.score, {
             font: '18px Arial',
             fill: '#ffffff',
-            backgroundColor: '#000000',
+            backgroundColor: '#60311f',
             padding: { x: 10, y: 5 }
         });
         this.reputation.depth = 7;
@@ -176,7 +194,7 @@ export class Start extends Phaser.Scene {
         this.hintBox = this.add.text(1200, 20, "Hint?", {
             font: '18px Arial',
             fill: '#ffffff',
-            backgroundColor: '#000000',
+            backgroundColor: '#60311f',
             padding: { x: 10, y: 5 }
         });
         this.hintBox.depth = 5;
@@ -312,9 +330,11 @@ export class Start extends Phaser.Scene {
         
         // Check for interaction key press when close to npc
         if (Phaser.Input.Keyboard.JustDown(this.interactKey) && isColliding && !this.dialogSystem.isActive()) {
-            this.hintBox.visible = true;
             const npc = calculateNearestNpc(this.player, this.npcs);
             this.dialogSystem.setNpcName(npc.name);
+            this.hintBox.visible = true;
+            
+            
             console.log(npc.name);
             // First show the dialog with a loading message
             this.dialogSystem.showDialog(["..."]);

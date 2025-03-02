@@ -2,6 +2,10 @@ import { extractNumber, extractTextAfterNumber } from "../utils/utils.js";
 import { calculateNearestNpc } from '../components/CollisionFunctions.js';
 
 export class DialogSystem {
+    preload() {
+        this.load.image('TalkBox', '/assets/TaskBox.png');
+    }    
+
     constructor(scene) {
         this.scene = scene;
         this.dialogActive = false;
@@ -31,14 +35,21 @@ export class DialogSystem {
         // Create a group for dialog elements
         this.dialogGroup = this.scene.add.group();
         
-        // Create dialog background
-        this.dialogBox = this.scene.add.rectangle(640, 600, 800, 200, 0x000000, 0.7);
+        // Load the TalkBox image as the background for the dialog box
+        this.dialogBox = this.scene.add.image(640, 600, 'TalkBox'); // Using the image instead of a rectangle
         this.dialogBox.setOrigin(0.5);
-        this.dialogBox.setStrokeStyle(4, 0xffffff);
+        this.dialogBox.setScale(4.5); // Adjust the scale to fit the screen if needed
         
         // Create NPC dialog text
-        this.dialogText = this.scene.add.text(640, 550, '', {
+        this.dialogText = this.scene.add.text(640, 570, '', {
             font: '24px Arial',
+            fill: '#ffffff',
+            wordWrap: { width: 760, useAdvancedWrap: true }
+        });
+        this.dialogText.setOrigin(0.5);
+
+        this.npcText = this.scene.add.text(375, 470, "Villager", {
+            font: '36px Arial',
             fill: '#ffffff',
             wordWrap: { width: 760, useAdvancedWrap: true }
         });
@@ -69,9 +80,11 @@ export class DialogSystem {
         this.dialogGroup.add(this.inputBox);
         this.dialogGroup.add(this.inputText);
         this.dialogGroup.add(this.instructionText);
-
+        this.dialogGroup.add(this.npcText);
+    
         this.dialogGroup.setDepth(10);
     }
+    
     
     update() {
         // Check for quit key
@@ -79,6 +92,10 @@ export class DialogSystem {
             this.hideDialog();
         }
         
+        if (this.currentNpc) {
+            this.npcText.setText(this.currentNpc);  // Update the text dynamically
+        }
+
         // Update blinking cursor
         if (this.dialogActive && this.isTyping) {
             this.updateInputText();
