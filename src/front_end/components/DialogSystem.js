@@ -63,6 +63,8 @@ export class DialogSystem {
         this.dialogGroup.add(this.inputBox);
         this.dialogGroup.add(this.inputText);
         this.dialogGroup.add(this.instructionText);
+
+        this.dialogGroup.setDepth(10);
     }
     
     update() {

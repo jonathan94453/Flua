@@ -26,7 +26,7 @@ export class Start extends Phaser.Scene {
         this.background = this.add.tileSprite(640, 360, 1280, 720, 'background');
         
         this.player = this.physics.add.sprite(640, 360, 'player', 0);
-        this.npc = this.physics.add.sprite(1000, 360, 'player', 20);
+        this.npc = this.physics.add.sprite(1000, 260, 'player', 20);
         this.score = 10;
         this.createReputation();
         this.createHintBox();
@@ -88,6 +88,7 @@ export class Start extends Phaser.Scene {
 
         // Create the dialog system
         this.dialogSystem = new DialogSystem(this);
+        this.dialogSystem.depth = 20;
 
         this.onDialogResponse = (responseNumber) => {
             // Update the score based on the response number
@@ -121,6 +122,7 @@ export class Start extends Phaser.Scene {
             backgroundColor: '#000000',
             padding: { x: 10, y: 5 }
         });
+        this.reputation.depth = 7;
     }
 
     updateReputationDisplay() {
@@ -136,7 +138,8 @@ export class Start extends Phaser.Scene {
             backgroundColor: '#000000',
             padding: { x: 10, y: 5 }
         });
-        
+        this.hintBox.depth = 5;
+
         // Make the hint box interactive
         this.hintBox.setInteractive();
 
@@ -144,6 +147,7 @@ export class Start extends Phaser.Scene {
         
         // Create the hint bubble (initially hidden)
         this.hintBubble = this.add.container(1100, 100);
+        this.hintBubble.depth = 6;
         
         // Background for the hint bubble
         const bubbleBg = this.add.rectangle(0, 0, 300, 150, 0x000000, 0.8);
@@ -191,6 +195,9 @@ export class Start extends Phaser.Scene {
                     this.hintText.setText("Error loading hint. Try again later.");
                 }
             }
+
+            this.score -= 2;
+            this.updateReputationDisplay();
         });
         
         // Close hint bubble when clicking elsewhere (optional)
