@@ -1,5 +1,5 @@
 import { DialogSystem } from '../components/DialogSystem.js';
-import { calculateCollision } from '../components/CollisionFunctions.js';
+import { calculateCollision, calculateNearestNpc } from '../components/CollisionFunctions.js';
 
 let firstResponse = "...";
 
@@ -28,19 +28,19 @@ export class Start extends Phaser.Scene {
         this.player = this.physics.add.sprite(640, 360, 'player', 0);
 
         // 5 npcs
-        this.villager = this.physics.add.sprite(1000, 260, 'player', 20);
-        this.inkeeper = this.physics.add.sprite(800, 260, 'player', 20);
-        this.shopkeeper = this.physics.add.sprite(900, 260, 'player', 20);
-        this.farmer = this.physics.add.sprite(1000, 300, 'player', 20);
-        this.blacksmith = this.physics.add.sprite(1000, 200, 'player', 20);
-
         this.npcs = [
-            this.villager,
-            this.inkeeper,
-            this.shopkeeper,
-            this.farmer,
-            this.blacksmith
+            this.villager = this.physics.add.sprite(1000, 260, 'player', 20),
+            this.inkeeper = this.physics.add.sprite(800, 260, 'player', 150),
+            this.shopkeeper = this.physics.add.sprite(900, 260, 'player', 60),
+            this.farmer = this.physics.add.sprite(1000, 350, 'player', 70),
+            this.blacksmith = this.physics.add.sprite(1000, 200, 'player', 130),
         ];
+
+        this.villager.setName("villager");
+        this.inkeeper.setName("innkeeper");
+        this.shopkeeper.setName("shopkeeper");
+        this.farmer.setName("farmer");
+        this.blacksmith.setName("blacksmith");
 
         this.score = 10;
         this.createReputation();
@@ -289,12 +289,14 @@ export class Start extends Phaser.Scene {
         // Check for interaction key press when close to npc
         if (Phaser.Input.Keyboard.JustDown(this.interactKey) && isColliding && !this.dialogSystem.isActive()) {
             this.hintBox.visible = true;
+            const npc = calculateNearestNpc(this.player, this.npcs);
+            console.log(npc.name);
             // First show the dialog with a loading message
             this.dialogSystem.showDialog(["..."]);
             
             // Then fetch the data
             try {
-                const response = await fetch('http://localhost:4000/npc/villager?prompt=init', {
+                const response = await fetch(`http://localhost:4000/npc/${npc.name}?prompt=init`, {
                     method: 'GET'
                 });
                 

@@ -84,3 +84,21 @@ export function calculateCollision(player, npcs) {
         nearestNpc // Return the nearest NPC for reference
     };
 }
+
+export function calculateNearestNpc(player, npcs) {
+    let nearestNpc = null;
+    let shortestDistance = Infinity;
+
+    npcs.forEach(npc => {
+        const dx = npc.x - player.x;
+        const dy = npc.y - player.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < shortestDistance) {
+            shortestDistance = distance;
+            nearestNpc = npc;
+        }
+    });
+
+    return nearestNpc;
+}
