@@ -8,8 +8,7 @@ class npcrouter {
         this.router = express.Router() 
         this.setUpRoutes(); 
 
-
-        this.language = language;
+        this.language = language 
         this.first_flag = true;
         this.conversation_history_villager = []
         this.conversation_history_innkeeper = []
@@ -169,16 +168,5 @@ updateLanguage(newLanguage) {
 
 
 } 
-
-
-
-
-
-
-
-    
-
-
-
 
 export default npcrouter  

@@ -18,7 +18,7 @@ app.use('/translate', translate.router)
 
 
 let language = "english" 
-
+let hint_language = "english" 
 
 // base endpoint 
 app.get('/test', (req, res) => {
@@ -38,11 +38,25 @@ app.post('/set_language', (req, res) => {
     }
 })
 
+app.post('/set_hint_language', (req, res) => {
+    const { value } = req.query 
+    if(typeof value == 'string') {
+        hint_language = value; 
+        translate.updateLanguage(hint_language) 
+        res.status(200).send('Hint Language setup successfully: ' + hint_language) 
+    }
+    else {
+        res.status(400).send('Invalid Value, must be a string')
+    }
+})
+
 app.get('/get_language', (req, res) => {
     res.status(200).send(language) 
 })
 
-
+app.get('/get_hint_language', (req, res) => {
+    res.status(200).send(hint_language); 
+}) 
  
 
 
