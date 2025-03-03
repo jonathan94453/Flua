@@ -30,7 +30,6 @@ app.post('/set_language', (req, res) => {
     const { value } = req.query
     if(typeof value == 'string') {
         language = value; 
-        npc_router.nullify_conversations() 
         npc_router.updateLanguage(language) 
         res.status(200).send('Variable updated successfully: ' + language)
     } 

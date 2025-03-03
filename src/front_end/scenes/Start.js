@@ -390,7 +390,7 @@ export class Start extends Phaser.Scene {
             
             // Then fetch the data
             try {
-                const response = await fetch(`https://flua-production.up.railway.app/npc/${npc.name}?prompt=init`, {
+                const response = await fetch(`https://localhost:4000/npc/${npc.name}?prompt=init`, {
                     method: 'GET'
                 });
                 
