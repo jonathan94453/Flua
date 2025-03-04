@@ -1,3 +1,5 @@
+# PickHacks 2025 -- Flua: A Language Learning App
+
 ## Inspiration
 We realized that learning a new language can often feel dull, so we set out to make it an engaging and enjoyable experience. This project is our way of transforming language learning into something fun and exciting!
 
