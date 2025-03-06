@@ -1,6 +1,6 @@
 # PickHacks 2025 -- Flua: A Language Learning App
 
-https://www.youtube.com/watch?v=lbtpiFhbuQk&t=50s&ab_channel=JackCase
+https://youtu.be/lbtpiFhbuQk?si=__4W2uDVK8mNtg7X
 
 https://devpost.com/software/flua
 
